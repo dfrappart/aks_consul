@@ -1,0 +1,9 @@
+version: 0.1
+
+projects:
+  - path: ../Terraformconfig/00_SubSetup
+    terraform_plan_flags: -var-file="terraform.tfvars" -var-file="Lab.tfvars"
+    terraform_use_state: true
+  - path: ../Terraformconfig/01_Infra_ARO
+    terraform_plan_flags: -var-file="terraform.tfvars" -var-file="Lab.tfvars"
+    terraform_use_state: true
