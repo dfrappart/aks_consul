@@ -54,7 +54,7 @@ module "AKS1" {
   AKSRGName                               = data.azurerm_resource_group.AKSRG.name
   AKSSubnetId                             = data.azurerm_subnet.fesubnet.id
   #AKSNetworkPlugin                        = "kubenet"
-  AKSNetPolProvider                       = null
+  #AKSNetPolProvider                       = null
   AKSClusSuffix                           = var.AKSClusSuffix
   AKSIdentityType                         = "UserAssigned"
   UAIId                                   = module.UAI_AKS.FullUAIOutput.id
@@ -252,3 +252,21 @@ module "AKS_NodePool" {
 
 }
 
+######################################################################
+# Module for AKS Node Pool
+
+module "ACR" {
+    #Module source
+    source = "../../Modules/PaaS_Azure_Container_Registry/"
+
+    #Module variables
+    
+    ACRRG                       = data.azurerm_resource_group.AKSRG.name
+    ACRLocation                 = data.azurerm_resource_group.AKSRG.location  
+    STALogId                    = data.azurerm_storage_account.STALog.id
+    LawLogId                    = data.azurerm_log_analytics_workspace.LAWLog.id 
+
+
+
+
+}

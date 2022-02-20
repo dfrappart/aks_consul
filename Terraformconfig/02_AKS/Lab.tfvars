@@ -9,3 +9,4 @@
 
 IsAGICEnabled         = false
 IsAKSPrivate          = false
+AKSClusSuffix         = "consul"

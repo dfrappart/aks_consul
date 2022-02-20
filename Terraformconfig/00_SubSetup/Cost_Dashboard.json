@@ -1,0 +1,491 @@
+{
+  "properties": {
+    "lenses": {
+      "0": {
+        "order": 0,
+        "parts": {
+          "0": {
+            "position": {
+              "x": 0,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "id",
+                  "value": "${subid}"
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Billing/PartType/SubscriptionDetailBurnRateChart"
+            }
+          },
+          "1": {
+            "position": {
+              "x": 6,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "id",
+                  "value": "/subscriptions/${subid}"
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_Billing/PartType/SubscriptionDetailCostByResource"
+            }
+          },
+          "2": {
+            "position": {
+              "x": 12,
+              "y": 0,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/${subid}"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "${subName}"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "currency": "EUR",
+                    "dateRange": "Last30Days",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "Daily",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "PreTaxCost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "PreTaxCostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "sorting": [
+                          {
+                            "direction": "ascending",
+                            "name": "UsageDate"
+                          }
+                        ],
+                        "grouping": [
+                          {
+                            "type": "Dimension",
+                            "name": "ResourceGroupName"
+                          }
+                        ]
+                      },
+                      "timeframe": "None"
+                    },
+                    "chart": "GroupedColumn",
+                    "accumulated": "false",
+                    "pivots": [
+                      {
+                        "type": "Dimension",
+                        "name": "ServiceName"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceLocation"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceGroupName"
+                      }
+                    ],
+                    "scope": "subscriptions/${subid}",
+                    "kpis": [
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "displayName": "DailyCosts"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
+          },
+          "3": {
+            "position": {
+              "x": 0,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/${subid}"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "${subName}"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "currency": "EUR",
+                    "dateRange": "CurrentBillingPeriod",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "Daily",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "PreTaxCost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "PreTaxCostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "sorting": [
+                          {
+                            "direction": "ascending",
+                            "name": "UsageDate"
+                          }
+                        ],
+                        "filter": {
+                          "Dimensions": {
+                            "Name": "PublisherType",
+                            "Operator": "In",
+                            "Values": [
+                              "azure"
+                            ]
+                          }
+                        }
+                      },
+                      "timeframe": "None"
+                    },
+                    "chart": "Area",
+                    "accumulated": "true",
+                    "pivots": [
+                      {
+                        "type": "Dimension",
+                        "name": "ServiceName"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceLocation"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceGroupName"
+                      }
+                    ],
+                    "scope": "subscriptions/${subid}",
+                    "kpis": [
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "displayName": "AccumulatedCosts"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
+          },
+          "4": {
+            "position": {
+              "x": 6,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/${subid}"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "${subName}"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "currency": "EUR",
+                    "dateRange": "CurrentBillingPeriod",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "Daily",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "PreTaxCost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "PreTaxCostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "sorting": [
+                          {
+                            "direction": "ascending",
+                            "name": "UsageDate"
+                          }
+                        ],
+                        "grouping": [
+                          {
+                            "type": "Dimension",
+                            "name": "ResourceLocation"
+                          }
+                        ],
+                        "filter": {
+                          "Dimensions": {
+                            "Name": "PublisherType",
+                            "Operator": "In",
+                            "Values": [
+                              "azure"
+                            ]
+                          }
+                        }
+                      },
+                      "timeframe": "None"
+                    },
+                    "chart": "GroupedColumn",
+                    "accumulated": "true",
+                    "pivots": [
+                      {
+                        "type": "Dimension",
+                        "name": "ServiceName"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceLocation"
+                      },
+                      {
+                        "type": "Dimension",
+                        "name": "ResourceGroupName"
+                      }
+                    ],
+                    "scope": "subscriptions/${subid}",
+                    "kpis": [
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "displayName": "AccumulatedCosts"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
+          },
+          "5": {
+            "position": {
+              "x": 12,
+              "y": 4,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/${subid}"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "${subName}"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "currency": "EUR",
+                    "dateRange": "CurrentBillingPeriod",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "None",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "PreTaxCost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "PreTaxCostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "grouping": [
+                          {
+                            "type": "Dimension",
+                            "name": "ResourceId"
+                          }
+                        ],
+                        "filter": {
+                          "Dimensions": {
+                            "Name": "PublisherType",
+                            "Operator": "In",
+                            "Values": [
+                              "azure"
+                            ]
+                          }
+                        }
+                      },
+                      "timeframe": "None"
+                    },
+                    "chart": "GroupedColumn",
+                    "accumulated": "false",
+                    "pivots": [],
+                    "scope": "subscriptions/${subid}",
+                    "kpis": [
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "displayName": "CostByResource"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
+          },
+          "6": {
+            "position": {
+              "x": 6,
+              "y": 8,
+              "colSpan": 6,
+              "rowSpan": 4
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "scope",
+                  "value": "/subscriptions/${subid}"
+                },
+                {
+                  "name": "scopeName",
+                  "value": "${subName}"
+                },
+                {
+                  "name": "view",
+                  "value": {
+                    "currency": "EUR",
+                    "dateRange": "Custom",
+                    "query": {
+                      "type": "ActualCost",
+                      "dataSet": {
+                        "granularity": "None",
+                        "aggregation": {
+                          "totalCost": {
+                            "name": "PreTaxCost",
+                            "function": "Sum"
+                          },
+                          "totalCostUSD": {
+                            "name": "PreTaxCostUSD",
+                            "function": "Sum"
+                          }
+                        },
+                        "grouping": [
+                          {
+                            "type": "Dimension",
+                            "name": "Meter"
+                          }
+                        ],
+                        "filter": {
+                          "Dimensions": {
+                            "Name": "PublisherType",
+                            "Operator": "In",
+                            "Values": [
+                              "azure"
+                            ]
+                          }
+                        }
+                      },
+                      "timeframe": "Custom",
+                      "timePeriod": {
+                        "from": "2019-10-03",
+                        "to": "2019-11-02"
+                      }
+                    },
+                    "chart": "Table",
+                    "accumulated": "false",
+                    "pivots": [],
+                    "scope": "subscriptions/${subid}",
+                    "kpis": [
+                      {
+                        "type": "Forecast",
+                        "enabled": true
+                      }
+                    ],
+                    "displayName": "InvoiceDetails"
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "externalState",
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/Microsoft_Azure_CostManagement/PartType/CostAnalysisPinPart"
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "model": {
+        "timeRange": {
+          "value": {
+            "relative": {
+              "duration": 24,
+              "timeUnit": 1
+            }
+          },
+          "type": "MsPortalFx.Composition.Configuration.ValueTypes.TimeRange"
+        }
+      }
+    }
+  },
+  "name": "Cost Dashboard",
+  "type": "Microsoft.Portal/dashboards",
+  "location": "INSERT LOCATION",
+  "tags": {
+    "hidden-title": "Cost Dashboard"
+  },
+  "apiVersion": "2015-08-01-preview"
+}
