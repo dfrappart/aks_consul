@@ -41,5 +41,5 @@ stages:
          echo '######################################################'
          echo
          docker version
-        workingDirectory: '/containers_artifacts/src/poi/'
+        workingDirectory: 'containers_artifacts/src/poi/'
         displayName: 'dockerbuild'
