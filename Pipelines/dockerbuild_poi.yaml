@@ -88,7 +88,10 @@ stages:
          az acr login --name ${ACRName}         
          echo
          echo 'tag container image'
-         docker tag tripinsights/poi:1.0 ${ACRName}.azurecr.io/tripinsights/poi:1.0           
+         docker tag tripinsights/poi:1.0 ${ACRName}.azurecr.io/tripinsights/poi:1.0
+         echo
+         echo 'push container image'         
+         docker push ${ACRName}.azurecr.io/tripinsights/poi:1.0           
          
         displayName: 'Push to Azure registry'
         env:
