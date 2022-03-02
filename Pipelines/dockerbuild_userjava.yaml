@@ -1,0 +1,102 @@
+#Pipeline name
+
+name: 'dockerbuild_user-java'
+
+
+#Parameters for the pipeline
+
+# CD Trigger
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - /containers_artifacts/src/user-java/*
+
+# Job Workers config
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Variables for the job
+
+variables:
+- group: ConsulLab
+- group: ConsulLabKV
+
+# Stages
+
+stages:
+  - stage: dockerbuild_user-java
+    jobs: 
+    - job: dockerbuild
+      continueOnError: false
+      # Job step
+      steps:
+      - script: |
+         echo '######################################################'   
+         echo 'building container'
+         echo '######################################################'
+         echo
+         docker version
+         echo
+         echo '######################################################'   
+         echo 'Start Build'
+         echo '######################################################'        
+         docker build --no-cache \
+         --build-arg IMAGE_VERSION="1.0" \
+         --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" \
+         --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" \
+         -f Dockerfile -t "tripinsights/user-java:1.0" .
+         echo
+         echo '######################################################'   
+         echo 'Listing Docker image'
+         echo '######################################################' 
+         docker image ls
+         echo
+         echo '######################################################'   
+         echo 'End Build'
+         echo '######################################################' 
+
+        workingDirectory: 'containers_artifacts/src/user-java/'
+        displayName: 'dockerbuild'
+
+      - script: |
+         echo Login to Azure
+         az login --service-principal -u ${appregid} -p ${appregsecret} --tenant ${tenantid}
+         echo
+         echo Listing subscriptions
+         az account list -o table
+         
+        displayName: 'Login to Azure'
+        env:
+          appregid: $(TFId)
+          appregsecret: $(TFSecret)
+          tenantid: $(TenantId)
+
+      - script: |
+         echo '######################################################'   
+         echo 'push image to registry'
+         echo '######################################################'
+         echo
+         echo 'set the target subscription'
+         az account set -s ${TargetSubscription}
+         echo
+         echo 'connect to registry'
+         az acr login --name ${ACRName}         
+         echo
+         echo 'tag container image'
+         docker tag tripinsights/user-java:1.0 ${ACRName}.azurecr.io/tripinsights/user-java:1.0
+         echo
+         echo 'push container image'         
+         docker push ${ACRName}.azurecr.io/tripinsights/user-java:1.0           
+         
+        displayName: 'Push to Azure registry'
+        env:
+          appregid: $(TFId)
+          appregsecret: $(TFSecret)
+          tenantid: $(TenantId)
+          ACRName: $(ACRName)
+          TargetSubscription: $(SubscriptionId)
