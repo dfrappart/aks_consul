@@ -75,3 +75,25 @@ stages:
           appregid: $(TFId)
           appregsecret: $(TFSecret)
           tenantid: $(TenantId)
+
+      - script: |
+         echo '######################################################'   
+         echo 'push image to registry'
+         echo '######################################################'
+         echo
+         echo 'set the target subscription'
+         az account set -s ${TargetSubscription}
+         echo
+         echo 'connect to registry'
+         az acr login --name ${ACRName}         
+         echo
+         echo 'tag container image'
+         docker tag tripinsights/poi:1.0 ${ACRName}.azurecr.io/tripinsights/poi:1.0           
+         
+        displayName: 'Push to Azure registry'
+        env:
+          appregid: $(TFId)
+          appregsecret: $(TFSecret)
+          tenantid: $(TenantId)
+          ACRName: $(ACRName)
+          TargetSubscription: $(SubscriptionId)
