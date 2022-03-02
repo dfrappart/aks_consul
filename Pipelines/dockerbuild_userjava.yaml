@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: 'dockerbuild_user-java'
+name: 'dockerbuild_userjava'
 
 
 #Parameters for the pipeline
@@ -29,7 +29,7 @@ variables:
 # Stages
 
 stages:
-  - stage: dockerbuild_user-java
+  - stage: dockerbuild_userjava
     jobs: 
     - job: dockerbuild
       continueOnError: false
