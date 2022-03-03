@@ -11,7 +11,7 @@ Project                             = "consul"
 Environment                         = "lab"
 
 ResourcesSuffix                     = "consul"
-ResourceGroupSuffixList             = ["spkaks","aks"]
+ResourceGroupSuffixList             = ["spkaks","aks","data"]
 
 SpokeVnetConfig                     = {
     "Spoke1"                        = {
@@ -32,3 +32,10 @@ DefaultTags                         = {
     ManagedBy                       = "Terraform"
 
   }
+
+MSSQLADAdminObjectId                = "546e2d3b-450e-4049-8f9c-423e1da3444c"
+
+MSSQLDBThreatDetectionPolicyEmail   = ["david@teknews.cloud"]
+
+AzureRegion                         = "swedencentral"
+MSSQLAcceptAzureService             = true
