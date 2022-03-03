@@ -42,6 +42,7 @@ module "BasicLogConfig" {
   Environment           = var.Environment
   Company               = var.Company
   SubId                 = data.azurerm_subscription.current.subscription_id
+  RGLogLocation         = var.RGLogLocation
 
 }
 
