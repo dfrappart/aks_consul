@@ -182,15 +182,18 @@ output "IPGroupsName" {
   }
   sensitive         = true
 }
-/*
+
+
 ##############################################################
 #Outout for NSG
 
 # NSG Bastion Subnet
 
 output "AzureBastionNSG_VNet_Name" {
-  value             = module.AROVNet[*].AzureBastionNSGName
-  sensitive         = true
+  value             = {
+    for k,v in var.SpokeVnetConfig : k=>module.SpokeVNet[k].AzureBastionNSGName
+  }
+  sensitive         = false
 }
 
 
@@ -198,7 +201,9 @@ output "AzureBastionNSG_VNet_Name" {
 # NSG AppGW Subnet
 
 output "AGWSubnetNSG_VNet_FullOutput" {
-  value             = module.AROVNet[*].AGWSubnetNSGFullOutput
+  value             = {
+    for k,v in var.SpokeVnetConfig : k=>module.SpokeVNet[k].AGWSubnetNSGFullOutput
+  }
   sensitive         = true
 }
 
@@ -207,7 +212,9 @@ output "AGWSubnetNSG_VNet_FullOutput" {
 # NSG FE Subnet
 
 output "FESubnetNSG_VNet_FullOutput" {
-  value             = module.AROVNet[*].FESubnetNSGFullOutput
+  value             = {
+    for k,v in var.SpokeVnetConfig : k=>module.SpokeVNet[k].FESubnetNSGFullOutput
+  }
   sensitive         = true
 }
 
@@ -216,7 +223,9 @@ output "FESubnetNSG_VNet_FullOutput" {
 # NSG BE Subnet
 
 output "BESubnetNSG_VNet_FullOutput" {
-  value             = module.AROVNet[*].BESubnetNSGFullOutput
+  value             = {
+    for k,v in var.SpokeVnetConfig : k=>module.SpokeVNet[k].BESubnetNSGFullOutput
+  }
   sensitive         = true
 }
 
@@ -226,16 +235,41 @@ output "BESubnetNSG_VNet_FullOutput" {
 #Output for Bastion Host
 
 output "SpokeBastion_Name" {
-  value             = module.AROVNet[*].SpokeBastionName
+  value             = {
+    for k,v in var.SpokeVnetConfig : k=>module.SpokeVNet[k].SpokeBastionName
+  }
   sensitive         = true
 }
 
 ##############################################################
-#Output for Bastion Host
+#Output for SQL Server
 
-output "FW" {
-  value                       = module.HubFirewall.FWFullOutput
-  sensitive                   = true
+output "MSSQLServer_FullOutput" {
+  value             = azurerm_mssql_server.SQLAppServer1
+  sensitive         = true
 }
 
-*/
+output "MSSQLServer_PwdKvRef" {
+  value             = module.MSSQLAdminPWD
+  sensitive         = true
+}
+
+output "MSSQLServer_VNetRule" {
+  value             = azurerm_mssql_virtual_network_rule.VNetRule-SQLAppServer1
+  sensitive         = true
+}
+
+output "MSSQLServer_AuditPolicy" {
+  value             = azurerm_mssql_server_extended_auditing_policy.SQLAppServer1_ExtendedAuditingPolicy
+  sensitive         = true
+}
+
+output "MSSQLDB_FullOutput" {
+  value             = azurerm_mssql_database.SQLDBMyDrivingDB
+  sensitive         = true
+}
+
+output "MSSQLDB_AuditPolicy" {
+  value             = azurerm_mssql_database_extended_auditing_policy.SQLDBMyDrivingDBExtendedAutitingPolicy
+  sensitive         = true
+}
