@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: userjavadeploy
+  name: userjavadeploy
+  namespace: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: userjavadeploy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: userjavadeploy
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/user-java:1.0
+        name: user-java
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: userjavaconfigmap
+              key: SQL_SERVER
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: userjavaconfigmap
+              key: PORT
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: pwd            
+        resources: {}
+status: {}

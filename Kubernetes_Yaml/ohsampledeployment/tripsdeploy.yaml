@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tripsdeploy
+  name: tripsdeploy
+  namespace: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tripsdeploy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tripsdeploy
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/trips:1.0
+        name: trips
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap
+              key: SQL_SERVER
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap
+              key: PORT
+        - name: OPENAPI_DOCS_URI
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap
+              key: OPENAPI_DOCS_URI       
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: pwd     
+        resources: {}
+status: {}

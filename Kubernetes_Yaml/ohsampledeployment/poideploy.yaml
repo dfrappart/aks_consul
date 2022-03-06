@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: poideploy
+  name: poideploy
+  namespace: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: poideploy
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: poideploy
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/poi:1.0
+        name: poi
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: poiconfigmap
+              key: SQL_SERVER
+        - name: WEB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: poiconfigmap
+              key: WEB_PORT
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: pwd                      
+        resources: {}
+status: {}

@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-tripviewer-ingress-apiprofile
+  namespace: api
+spec:
+  podSelector: 
+    matchLabels:
+      app: userprofile
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tier: front
+          app: tripinsights
+    ports:
+    - protocol: TCP
+      port: 8082
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-tripviewer-ingress-trips
+  namespace: api
+spec:
+  podSelector: 
+    matchLabels:
+      app: tripsdeploy
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          tier: front
+          app: tripinsights
+    ports:
+    - protocol: TCP
+      port: 8081    

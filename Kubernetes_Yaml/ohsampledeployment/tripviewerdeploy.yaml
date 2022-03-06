@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tripviewer
+  name: tripviewerdeploy
+  namespace: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tripviewer
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tripviewer
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/tripviewer:1.0
+        name: tripviewer
+        env:
+        - name: USERPROFILE_API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: tripviewerconfigmap
+              key: USERPROFILE_API_ENDPOINT
+        - name: TRIPS_API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: tripviewerconfigmap
+              key: TRIPS_API_ENDPOINT        
+        resources: {}
+status: {}

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: userprofile
+  name: userprofile
+  namespace: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: userprofile
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: userprofile
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/userprofile:1.0
+        name: userprofile
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: userprofileconfigmap
+              key: SQL_SERVER
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: userprofileconfigmap
+              key: PORT
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret
+              key: pwd    
+        resources: {}
+status: {}
