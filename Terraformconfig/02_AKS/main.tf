@@ -246,14 +246,14 @@ module "AKS_NodePool" {
   NPSuffix                                = each.key
   AKSClusterId                            = module.AKS1.KubeId
   AKSNodeTaints                           = each.value.AKSNodeTaints
-  AKSNodeLabels                           = each.value.AKSNodeLabels
+  #AKSNodeLabels                           = each.value.AKSNodeLabels
   AKSSubnetId                             = data.azurerm_subnet.fesubnet.id
 
 
 }
 
 ######################################################################
-# Module for AKS Node Pool
+# Module for ACR Pool
 
 module "ACR" {
     #Module source
@@ -264,9 +264,44 @@ module "ACR" {
     ACRRG                       = data.azurerm_resource_group.AKSRG.name
     ACRLocation                 = data.azurerm_resource_group.AKSRG.location  
     STALogId                    = data.azurerm_storage_account.STALog.id
-    LawLogId                    = data.azurerm_log_analytics_workspace.LAWLog.id 
+    LawLogId                    = data.azurerm_log_analytics_workspace.LAWLog.id
+    IsACRAssociatedtoAKSCluster = true
+    AKSKubeletPrincipalId       = module.AKS1.FullAKS.kubelet_identity[0].object_id
+
 
 
 
 
 }
+
+/*
+######################################################################
+# creating ACI for dataload
+resource "azurerm_container_group" "dataload" {
+  name                = "dataload"
+  location            = "westeurope" #data.azurerm_resource_group.AKSRG.location
+  resource_group_name = data.azurerm_resource_group.AKSRG.name
+  ip_address_type     = "public"
+  #dns_name_label      = "aci-label"
+  os_type             = "Linux"
+
+  container {
+    name   = "dataload"
+    image  = "acrbvcc1.azurecr.io/dataload:1.0"
+    cpu    = "0.5"
+    memory = "1.5"
+    secure_environment_variables = {
+      "SQLFQDN"="mssqlconsul.database.windows.net" 
+      "SQLUSER"="MSSQLAdminLogin-consul" 
+      "SQLPASS"="Sei9=:yZmkF!c]H6" 
+      "SQLDB"="mydrivingDB"
+      
+    }
+
+  }
+
+
+
+  tags = var.DefaultTags
+}
+*/

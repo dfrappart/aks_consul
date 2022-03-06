@@ -138,31 +138,31 @@ module "VMWin" {
   DefaultTags                             = var.DefaultTags
 }
 
-/*
-######################################################################
-# allow https on agw
 
-module "NSGRuleRDPAllow_FromBastionSpk2" {
+######################################################################
+# allow http/s on fe
+
+module "NSGRuleHTTPAllow_FromInternetToFE" {
   
   #Module location
   source = "../../Modules/222_NSGRule/"
 
   #Module variable
-  RuleSuffix                      = "RDPAllow_FromBastionSpk2"
+  RuleSuffix                      = "NSGRuleHTTPAllow_FromInternetToFE"
   RulePriority                    = 1011
   RuleDirection                   = "Inbound"
   RuleAccess                      = "Allow"
   RuleProtocol                    = "Tcp"
-  RuleDestPorts                    = [3389]
-  RuleSRCAddressPrefix            = module.SpokeVNet["Spoke2"].AzureBastionSubnetFullOutput.address_prefix
-  RuleDestAddressPrefix           = module.SpokeVNet["Spoke1"].FESubnetFullOutput.address_prefix
+  RuleDestPorts                    = [80,443]
+  RuleSRCAddressPrefix            = "Internet"
+  RuleDestAddressPrefix           = "*"
   TargetRG                        = module.SpokeVNet["Spoke1"].FESubnetNSGFullOutput.resource_group_name
   TargetNSG                       = module.SpokeVNet["Spoke1"].FESubnetNSGFullOutput.name
 
 
 }
 
-*/
+
 
 ######################################################################
 # creating an azure sql server for lab usage

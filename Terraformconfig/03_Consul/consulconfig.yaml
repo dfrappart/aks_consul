@@ -4,11 +4,15 @@ global:
   logLevel: info
   gossipEncryption:
     autoGenerate: true
-  metrics: 
-    enabled: true
-    enableAgentMetrics: true
-    agentMetricsRetentionTime: "1m"
-    enableGatewayMetrics: true
+#  metrics: 
+#    enabled: true
+#    enableAgentMetrics: true
+#    agentMetricsRetentionTime: "1m"
+#    enableGatewayMetrics: true
+#  tls:
+#    enabled: true
+#    enableAutoEncrypt: true
+#    verify: true
 acls:
   manageSystemACLs: true
 server:

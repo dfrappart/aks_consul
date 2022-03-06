@@ -62,6 +62,18 @@ variable "Environment" {
   default                         = "lab"
 }
 
+
+variable "DefaultTags" {
+
+  description                           = "Define a set of default tags"
+  
+}
+
+variable "ExtraTags" {
+  type                                  = map
+  description                           = "Define a set of additional optional tags."
+  default                               = {}
+}
 variable "ResourcesSuffix" {
   type                            = string
   description                     = "The environment, dev, prod..."
@@ -257,7 +269,6 @@ variable "DefaultSiteIdentifier" {
 
 variable "AKSNodePoolConfig" {
   type = map(object({
-    AKSNodeLabels                       = list(string)
     AKSNodeTaints                       = list(string)
     IsNodePoolDeployed                  = bool
   }))
@@ -265,9 +276,8 @@ variable "AKSNodePoolConfig" {
 
   default = {
     "1" = {
-      AKSNodeLabels = []
-      AKSNodeTaints = []
-      IsNodePoolDeployed = false
+      AKSNodeTaints = null
+      IsNodePoolDeployed = true
     }
   }
 }
