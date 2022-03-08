@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: tripsdeploy
+    app: trips
   name: tripsdeploy
   namespace: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: tripsdeploy
+      app: trips
   strategy: {}
   template:
     metadata:
       labels:
-        app: tripsdeploy
+        app: trips
     spec:
       containers:
       - image: acrbvcc1.azurecr.io/tripinsights/trips:1.0

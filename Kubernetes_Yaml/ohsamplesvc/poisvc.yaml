@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: poideploy
-  name: poideploy
+    app: poi
+  name: poisvc
   namespace: api
 spec:
   ports:
@@ -11,6 +11,6 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: poideploy
+    app: poi
 status:
   loadBalancer: {}

@@ -12,6 +12,9 @@ spec:
     metadata:
       labels:
         app: azure-vote-back
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
@@ -55,6 +58,9 @@ spec:
     metadata:
       labels:
         app: azure-vote-front
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
@@ -83,10 +89,3 @@ spec:
   - port: 80
   selector:
     app: azure-vote-front
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: votingappallinone
-spec: {}
-status: {}

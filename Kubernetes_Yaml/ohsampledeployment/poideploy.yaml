@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: poideploy
+    app: poi
   name: poideploy
   namespace: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: poideploy
+      app: poi
   strategy: {}
   template:
     metadata:
       labels:
-        app: poideploy
+        app: poi
     spec:
       containers:
       - image: acrbvcc1.azurecr.io/tripinsights/poi:1.0

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: userprofile
-  name: userprofile
+  name: userprofiledeploy
   namespace: api
 spec:
   replicas: 3

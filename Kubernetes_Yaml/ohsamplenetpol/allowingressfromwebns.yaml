@@ -27,7 +27,7 @@ metadata:
 spec:
   podSelector: 
     matchLabels:
-      app: tripsdeploy
+      app: trips
   policyTypes:
   - Ingress
   ingress:

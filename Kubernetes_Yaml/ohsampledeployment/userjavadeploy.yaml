@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: userjavadeploy
+    app: userjava
   name: userjavadeploy
   namespace: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: userjavadeploy
+      app: userjava
   strategy: {}
   template:
     metadata:
       labels:
-        app: userjavadeploy
+        app: userjava
     spec:
       containers:
       - image: acrbvcc1.azurecr.io/tripinsights/user-java:1.0
