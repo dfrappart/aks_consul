@@ -245,6 +245,7 @@ module "AKS_NodePool" {
 
   NPSuffix                                = each.key
   AKSClusterId                            = module.AKS1.KubeId
+  MinAutoScaleCount                       = 3
   AKSNodeTaints                           = each.value.AKSNodeTaints
   #AKSNodeLabels                           = each.value.AKSNodeLabels
   AKSSubnetId                             = data.azurerm_subnet.fesubnet.id
