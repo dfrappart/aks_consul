@@ -10,7 +10,7 @@ terraformbackendconfig.tf
 Terraformconfig/11_Scripts
 Terraformconfig/12_Velero
 Terraformconfig/10_Tad
-/Modules
+/Modules/2*
 .terraform.lock.hcl
 /Terraformconfig/04_CSI_Secret_Store_Manifest/*.yaml
 Terraformconfig/04_CSI_Secret_Store_Manifest/SecretStore/*.yaml
