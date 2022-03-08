@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tripviewer-consul
+  name: tripviewerdeploy-consul
+  namespace: web-consul
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tripviewer-consul
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tripviewer-consul
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
+        consul.hashicorp.com/connect-service-upstreams: "userprofilesvc-consul.api-consul:8082,tripssvc-consul.api-consul:8081"
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/tripviewer:1.0
+        name: tripviewer
+        env:
+        - name: USERPROFILE_API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: tripviewerconfigmap-consul
+              key: USERPROFILE_API_ENDPOINT
+        - name: TRIPS_API_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: tripviewerconfigmap-consul
+              key: TRIPS_API_ENDPOINT        
+        resources: {}
+status: {}

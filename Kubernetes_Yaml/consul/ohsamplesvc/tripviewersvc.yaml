@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: tripviewer-consul
+  name: tripviewersvc-consul
+  namespace: web-consul
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: tripviewer-consul
+status:
+  loadBalancer: {}

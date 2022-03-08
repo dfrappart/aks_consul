@@ -1,0 +1,45 @@
+apiVersion: v1
+data:
+  SQL_SERVER: mssqlconsul.database.windows.net
+  WEB_PORT: "8080"
+kind: ConfigMap
+metadata:
+  name: poiconfigmap-consul
+  namespace: api-consul
+---
+apiVersion: v1
+data:
+  SQL_SERVER: mssqlconsul.database.windows.net
+  PORT: "8081"
+  OPENAPI_DOCS_URI: "http://localhost:8081"
+kind: ConfigMap
+metadata:
+  name: tripsconfigmap-consul
+  namespace: api-consul
+---
+apiVersion: v1
+data:
+  SQL_SERVER: mssqlconsul.database.windows.net
+  PORT: "8082"
+kind: ConfigMap
+metadata:
+  name: userprofileconfigmap-consul
+  namespace: api-consul
+---
+apiVersion: v1
+data:
+  SQL_SERVER: mssqlconsul.database.windows.net
+  PORT: "8083"
+kind: ConfigMap
+metadata:
+  name: userjavaconfigmap-consul
+  namespace: api-consul
+---
+apiVersion: v1
+data:
+  USERPROFILE_API_ENDPOINT: "http://userprofilesvc-consul.api-consul:8082"
+  TRIPS_API_ENDPOINT: "http://tripssvc-consul.api-consul:8081"
+kind: ConfigMap
+metadata:
+  name: tripviewerconfigmap-consul
+  namespace: web-consul

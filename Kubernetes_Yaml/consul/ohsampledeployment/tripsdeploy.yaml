@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: trips-consul
+  name: tripsdeploy-consul
+  namespace: api-consul
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: trips-consul
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: trips-consul
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/trips:1.0
+        name: trips
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap-consul
+              key: SQL_SERVER
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap-consul
+              key: PORT
+        - name: OPENAPI_DOCS_URI
+          valueFrom:
+            configMapKeyRef:
+              name: tripsconfigmap-consul
+              key: OPENAPI_DOCS_URI       
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: pwd     
+        resources: {}
+status: {}

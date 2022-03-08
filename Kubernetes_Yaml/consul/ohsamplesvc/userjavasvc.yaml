@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: userjava-consul
+  name: userjavasvc-consul
+  namespace: api-consul
+spec:
+  ports:
+  - port: 8083
+    protocol: TCP
+    targetPort: 8083
+  selector:
+    app: userjava-consul
+status:
+  loadBalancer: {}

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: userprofil-consul
+  name: userprofilesvc-consul
+  namespace: api-consul
+spec:
+  ports:
+  - port: 8082
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: userprofil-consul
+status:
+  loadBalancer: {}

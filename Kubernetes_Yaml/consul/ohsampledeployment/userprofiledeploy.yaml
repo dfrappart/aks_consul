@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: userprofil-consul
+  name: userprofiledeploy-consul
+  namespace: api-consul
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: userprofil-consul
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: userprofil-consul
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/userprofile:1.0
+        name: userprofile
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: userprofileconfigmap-consul
+              key: SQL_SERVER
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: userprofileconfigmap-consul
+              key: PORT
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: pwd    
+        resources: {}
+status: {}

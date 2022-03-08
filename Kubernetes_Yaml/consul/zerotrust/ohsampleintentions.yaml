@@ -1,0 +1,34 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: tripviewer-to-tripsapi
+spec:
+  destination:
+    name: tripssvc-consul
+  sources:
+    - name: tripviewersvc-consul
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: tripviewer-to-userapi
+spec:
+  destination:
+    name: userprofilesvc-consul
+  sources:
+    - name: tripviewersvc-consul
+      action: allow
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: userapi-tripsapi-to-tripviewer
+spec:
+  destination:
+    name: tripviewersvc-consul
+  sources:
+    - name: userprofilesvc-consul
+      action: allow
+    - name: tripssvc-consul
+      action: allow

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: poi-consul
+  name: poideploy-consul
+  namespace: api-consul
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: poi-consul
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: poi-consul
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
+    spec:
+      containers:
+      - image: acrbvcc1.azurecr.io/tripinsights/poi:1.0
+        name: poi
+        env:
+        - name: SQL_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: poiconfigmap-consul
+              key: SQL_SERVER
+        - name: WEB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: poiconfigmap-consul
+              key: WEB_PORT
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: SQL_USR
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tripsecret-consul
+              key: pwd                      
+        resources: {}
+status: {}
