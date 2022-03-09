@@ -22,3 +22,16 @@ DefaultTags                         = {
     ManagedBy                       = "Terraform"
 
   }
+
+ACRReplList = {
+  "Region1"               = {
+      Location                = "westeurope"
+      ZoneRedundancyEnabled   = true      
+    }
+
+  "Region2"               = {
+      Location                = "northeurope"
+      ZoneRedundancyEnabled   = true      
+    }
+
+}

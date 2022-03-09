@@ -268,7 +268,7 @@ module "ACR" {
     LawLogId                    = data.azurerm_log_analytics_workspace.LAWLog.id
     IsACRAssociatedtoAKSCluster = true
     AKSKubeletPrincipalId       = module.AKS1.FullAKS.kubelet_identity[0].object_id
-
+    ACRReplList                 = var.ACRReplList
 
 
 
@@ -294,7 +294,7 @@ resource "azurerm_container_group" "dataload" {
     secure_environment_variables = {
       "SQLFQDN"="mssqlconsul.database.windows.net" 
       "SQLUSER"="MSSQLAdminLogin-consul" 
-      "SQLPASS"="Sei9=:yZmkF!c]H6" 
+      "SQLPASS"="" 
       "SQLDB"="mydrivingDB"
       
     }

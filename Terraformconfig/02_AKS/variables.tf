@@ -281,3 +281,28 @@ variable "AKSNodePoolConfig" {
     }
   }
 }
+
+######################################################
+# ACR variable
+variable "ACRReplList" {
+  type                      = map(object({
+    Location                = string
+    ZoneRedundancyEnabled   = bool
+
+  }))
+  default                   = {
+
+    "Region1"               = {
+      Location                = "westeurope"
+      ZoneRedundancyEnabled   = true      
+    }
+
+  }
+  description   = "A map to feed the dynamic block georeplications"
+
+}
+
+variable "ACRReplList2" {
+  type = list()
+  default = ["westeurope","northeurope"]
+}

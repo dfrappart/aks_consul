@@ -23,7 +23,19 @@ resource "azurerm_container_registry" "ACR" {
   admin_enabled                         = var.IsAdminEnabled
 
   sku                                   = var.ACRSku
-  georeplication_locations              = var.ACRReplList
+  #georeplication_locations              = var.ACRReplList
+
+  dynamic "georeplications" {
+    for_each                            = var.ACRReplList
+
+
+    content {
+      location                          = georeplications.value.Location
+      zone_redundancy_enabled           = georeplications.value.ZoneRedundancyEnabled
+      tags                              = merge(var.DefaultTags,var.ExtraTags,{"ACRMainRegion"=var.ACRLocation})
+    }
+  }
+
 
 
   tags                                  = merge(var.DefaultTags,var.ExtraTags)
@@ -31,7 +43,7 @@ resource "azurerm_container_registry" "ACR" {
 }
 
 ##############################################################
-# Assingment for AKS cluster
+# Assignment for AKS cluster
 
 resource "azurerm_role_assignment" "AKS_ACR_Association" {
   count                                 = var.IsACRAssociatedtoAKSCluster ? 1 : 0

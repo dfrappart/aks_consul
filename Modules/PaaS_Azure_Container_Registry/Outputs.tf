@@ -65,3 +65,7 @@ output "ACRAdminPassword" {
   description = "The Admin password of the ACR"
   sensitive = true
 }
+
+output "test" {
+  value = local.test
+}

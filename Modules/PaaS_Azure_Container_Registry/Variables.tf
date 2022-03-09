@@ -64,7 +64,7 @@ variable "IsAdminEnabled" {
 #This variable determines the Sku of the ACR. Allowed values are basic, standard & premium
 variable "ACRSku" {
   type          = string
-  default       = "Standard"
+  default       = "Premium"
   description   = "This variable determines the Sku of the ACR. Allowed values are basic, standard & premium"
     
   
@@ -73,9 +73,20 @@ variable "ACRSku" {
 
 #The list of Region for replication of the ACR
 variable "ACRReplList" {
-  type          = list
-  default       = null
-  description   = "The list of Region for replication of the ACR"
+  type                      = map(object({
+    Location                = string
+    ZoneRedundancyEnabled   = bool
+
+  }))
+  default                   = {
+
+    "Region1"               = {
+      Location                = "westeurope"
+      ZoneRedundancyEnabled   = true      
+    }
+
+  }
+  description   = "A map to feed the dynamic block georeplications"
 
 }
 
