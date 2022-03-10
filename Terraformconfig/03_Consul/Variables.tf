@@ -161,7 +161,7 @@ variable "kubecontext" {
 variable "ConsulChartVer" {
   type                          = string
   description                   = "The version of the chart"
-  default                       = "0.40.0"
+  default                       = "0.41.1"
 }
 
 variable "ConsulChartParam" {
