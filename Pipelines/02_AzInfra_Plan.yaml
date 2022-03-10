@@ -13,7 +13,7 @@ trigger:
     - main
   paths:
     include:
-    - Terraformconfig/01_Infra_AKS/*
+    - Terraformconfig/01_Infra/*
     - Modules/*
 
 # Job Workers config
@@ -24,8 +24,8 @@ pool:
 # Variables for the job
 
 variables:
-- group: CSILab
-- group: CSILabKV
+- group: ConsulLab
+- group: ConsulLabKV
 
 # Stages
 
@@ -99,7 +99,7 @@ stages:
          -var AzureClientID=${AzureClientID} \
          -var AzureSubscriptionID=${AzureSubscriptionID} \
     
-        workingDirectory: 'Terraformconfig/01_Infra_AKS'
+        workingDirectory: 'Terraformconfig/01_Infra'
         displayName: 'Terraform init & Plan'
         env:
           AzureClientID: $(TFId)
@@ -130,36 +130,26 @@ stages:
          echo '######################################################'
          echo
          checkov -d . --quiet --soft-fail
-#--baseline ./.checkov.baseline
-         
-#         echo '######################################################'   
-#         echo 'Checkov scan from previous plan '
-#         echo '######################################################'
-#         echo
-#         terraform show -json tf.plan  > tf.json
-#         checkov -f ./tf.json --baseline ./.checkov.baseline     
     
-        workingDirectory: 'Terraformconfig/01_Infra_AKS'
+        workingDirectory: 'Terraformconfig/01_Infra'
         displayName: 'Checkov Scan'
 
       - script: |
          echo Getting tfsec
-
-         wget https://tfsec.dev/assets/signing.asc
-         wget https://github.com/aquasecurity/tfsec/releases/download/v0.58.14/tfsec-linux-amd64
-         wget https://github.com/aquasecurity/tfsec/releases/download/v0.58.14/tfsec-linux-amd64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
+         wget https://aquasecurity.github.io/tfsec/v1.0.2/assets/signing.asc
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-linux-amd64
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-checkgen-linux-arm64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
          cat signing.asc > /tmp/tfsec_key.txt
          gpg --import < /tmp/tfsec_key.txt
          gpg --list-keys signing@tfsec.dev
          sudo install tfsec-linux-amd64 /usr/local/bin/tfsec 
          
         displayName: 'Install tfsec'
-
       - script: |
          echo '######################################################'   
          echo 'tfsec scan in directory '
          echo '######################################################'
          echo
-         tfsec . -s
-        workingDirectory: 'Terraformconfig/01_Infra_AKS'
+         tfsec . -s --exclude-downloaded-modules
+        workingDirectory: 'Terraformconfig/01_Infra'
         displayName: 'tfsec Scan'
