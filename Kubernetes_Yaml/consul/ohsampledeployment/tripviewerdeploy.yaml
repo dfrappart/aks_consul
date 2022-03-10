@@ -4,7 +4,7 @@ metadata:
   labels:
     app: tripviewer-consul
   name: tripviewerdeploy-consul
-  namespace: web-consul
+  namespace: tripsinsight-consul
 spec:
   replicas: 3
   selector:
@@ -17,11 +17,11 @@ spec:
         app: tripviewer-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-#        consul.hashicorp.com/transparent-proxy: "true"
-        consul.hashicorp.com/connect-service-upstreams: "userprofilesvc-consul.api-consul:8082,tripssvc-consul.api-consul:8081"
+        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/connect-service-upstreams: "userprofilesvc-consul:8082,tripssvc-consul:8081"
     spec:
       containers:
-      - image: acrbvcc1.azurecr.io/tripinsights/tripviewer:1.0
+      - image: acr0vbnv.azurecr.io/tripinsights/tripviewer:1.0
         name: tripviewer
         env:
         - name: USERPROFILE_API_ENDPOINT

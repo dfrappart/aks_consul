@@ -4,7 +4,7 @@ metadata:
   labels:
     app: userprofil-consul
   name: userprofilesvc-consul
-  namespace: api-consul
+  namespace: tripsinsight-consul
 spec:
   ports:
   - port: 8082

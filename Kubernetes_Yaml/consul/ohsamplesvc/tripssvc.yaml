@@ -4,7 +4,7 @@ metadata:
   labels:
     app: trips-consul
   name: tripssvc-consul
-  namespace: api-consul
+  namespace: tripsinsight-consul
 spec:
   ports:
   - port: 8081

@@ -4,7 +4,7 @@ metadata:
   labels:
     app: userjava-consul
   name: userjavadeploy-consul
-  namespace: api-consul
+  namespace: tripsinsight-consul
 spec:
   replicas: 3
   selector:
@@ -17,10 +17,10 @@ spec:
         app: userjava-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-#        consul.hashicorp.com/transparent-proxy: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       containers:
-      - image: acrbvcc1.azurecr.io/tripinsights/user-java:1.0
+      - image: acr0vbnv.azurecr.io/tripinsights/user-java:1.0
         name: user-java
         env:
         - name: SQL_SERVER

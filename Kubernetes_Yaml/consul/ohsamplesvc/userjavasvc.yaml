@@ -4,7 +4,7 @@ metadata:
   labels:
     app: userjava-consul
   name: userjavasvc-consul
-  namespace: api-consul
+  namespace: tripsinsight-consul
 spec:
   ports:
   - port: 8083

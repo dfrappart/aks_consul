@@ -4,7 +4,7 @@ metadata:
   labels:
     app: tripviewer-consul
   name: tripviewersvc-consul
-  namespace: web-consul
+  namespace: tripsinsight-consul
 spec:
   type: LoadBalancer
   ports:
