@@ -24,8 +24,8 @@ pool:
 # Variables for the job
 
 variables:
-- group: CSILab
-- group: CSILabKV
+- group: ConsulLab
+- group: ConsulLabKV
 
 # Stages
 
