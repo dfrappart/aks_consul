@@ -105,7 +105,6 @@ stages:
 
       - script: |
          echo Getting Checkov
-
          sudo apt update
          sudo apt install software-properties-common
          sudo add-apt-repository ppa:deadsnakes/ppa
@@ -114,13 +113,13 @@ stages:
          sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
          
         displayName: 'Install Checkov'
-
+        
       - script: |
          echo '######################################################'   
          echo 'Checkov scan in directory '
          echo '######################################################'
          echo
-         checkov --directory . --quiet --soft-fail
+         checkov -d . --compact --quiet --download-external-modules true --soft-fail
  
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
