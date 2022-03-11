@@ -114,7 +114,16 @@ stages:
          echo
          echo '######################################################'    
          echo 'Init Terraform'
-#         echo
+         echo
+         echo ${AzureSubscriptionID}
+         echo 
+         echo ${key}
+         echo
+         echo 
+         echo ${container_name}
+         echo 
+         echo ${storage_account_name}
+         echo
 #         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
 #         echo
 #         echo 'State is stored in:'${key}
