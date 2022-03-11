@@ -115,8 +115,8 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(SubSetupState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
 
       - script: |
          echo Getting Checkov
@@ -246,5 +246,5 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(SubSetupState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
