@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: '00_SubSetup_Plan'
+name: '01_SubSetup_Apply'
 
 
 #Parameters for the pipeline
