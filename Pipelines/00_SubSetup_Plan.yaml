@@ -115,29 +115,20 @@ stages:
          echo '######################################################'    
          echo 'Init Terraform'
          echo
-         echo ${AzureSubscriptionID}
-         echo 
-         echo ${key}
+         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
          echo
-         echo 
-         echo ${container_name}
-         echo 
-         echo ${storage_account_name}
+         echo 'State is stored in:'${key}
          echo
-#         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
-#         echo
-#         echo 'State is stored in:'${key}
-#         echo
-#         echo '######################################################'
-#         echo 'check terraform'
-#         terraform version
-#         echo
-#         echo 'check files'
-#         ls -a
-#         echo 'Plan Terraform'
-#         echo
-#         terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
-#     
+         echo '######################################################'
+         echo 'check terraform'
+         terraform version
+         echo
+         echo 'check files'
+         ls -a
+         echo 'Plan Terraform'
+         echo
+         terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
+     
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
         displayName: 'Terraform init & Plan'
@@ -148,5 +139,5 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(SubSetupState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
