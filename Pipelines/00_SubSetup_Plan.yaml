@@ -64,27 +64,27 @@ stages:
         env:
           TFVer: $(TFVer)
       
-      - script: |
-         echo Getting Checkov
-         sudo apt update
-         sudo apt install software-properties-common
-         sudo add-apt-repository ppa:deadsnakes/ppa
-         sudo apt install python3.7
-         sudo apt install python3-pip
-         sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
-         
-        displayName: 'Install Checkov'
-        
-      - script: |
-         echo '######################################################'   
-         echo 'Checkov scan in directory '
-         echo '######################################################'
-         echo
-         checkov -d . --compact --quiet --download-external-modules true --soft-fail
- 
-    
-        workingDirectory: 'Terraformconfig/00_SubSetup'
-        displayName: 'Checkov Scan'
+#      - script: |
+#         echo Getting Checkov
+#         sudo apt update
+#         sudo apt install software-properties-common
+#         sudo add-apt-repository ppa:deadsnakes/ppa
+#         sudo apt install python3.7
+#         sudo apt install python3-pip
+#         sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
+#         
+#        displayName: 'Install Checkov'
+#        
+#      - script: |
+#         echo '######################################################'   
+#         echo 'Checkov scan in directory '
+#         echo '######################################################'
+#         echo
+#         checkov -d . --compact --quiet --download-external-modules true --soft-fail
+# 
+#    
+#        workingDirectory: 'Terraformconfig/00_SubSetup'
+#        displayName: 'Checkov Scan'
 
       - script: |
          echo Getting tfsec
@@ -114,21 +114,21 @@ stages:
          echo
          echo '######################################################'    
          echo 'Init Terraform'
-         echo
-         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
-         echo
-         echo 'State is stored in:'${key}
-         echo
-         echo '######################################################'
-         echo 'check terraform'
-         terraform version
-         echo
-         echo 'check files'
-         ls -a
-         echo 'Plan Terraform'
-         echo
-         terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
-     
+#         echo
+#         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
+#         echo
+#         echo 'State is stored in:'${key}
+#         echo
+#         echo '######################################################'
+#         echo 'check terraform'
+#         terraform version
+#         echo
+#         echo 'check files'
+#         ls -a
+#         echo 'Plan Terraform'
+#         echo
+#         terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
+#     
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
         displayName: 'Terraform init & Plan'
