@@ -17,11 +17,13 @@ spec:
         app: userprofil-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       containers:
       - image: acr0vbnv.azurecr.io/tripinsights/userprofile:1.0
         name: userprofile
+        ports:
+        - containerPort: 8082
         env:
         - name: SQL_SERVER
           valueFrom:

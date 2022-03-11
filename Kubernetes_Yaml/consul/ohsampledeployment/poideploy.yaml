@@ -17,11 +17,13 @@ spec:
         app: poi-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       containers:
       - image: acr0vbnv.azurecr.io/tripinsights/poi:1.0
         name: poi
+        ports:
+        - containerPort: 8080
         env:
         - name: SQL_SERVER
           valueFrom:

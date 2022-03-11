@@ -18,11 +18,13 @@ spec:
       annotations:
         consul.hashicorp.com/connect-inject: "true"
 #        consul.hashicorp.com/connect-service-upstreams: "tripssvc-consul:8082,userprofilesvc-consul:8081"
-        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       containers:
       - image: acr0vbnv.azurecr.io/tripinsights/trips:1.0
         name: trips
+        ports:
+        - containerPort: 8081
         env:
         - name: SQL_SERVER
           valueFrom:

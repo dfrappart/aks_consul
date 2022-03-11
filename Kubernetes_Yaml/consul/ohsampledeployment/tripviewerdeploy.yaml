@@ -17,22 +17,26 @@ spec:
         app: tripviewer-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
 #        consul.hashicorp.com/connect-service-upstreams: "userprofilesvc-consul:8082,tripssvc-consul:8081"
     spec:
       containers:
       - image: acr0vbnv.azurecr.io/tripinsights/tripviewer:1.0
         name: tripviewer
+        ports:
+        - containerPort: 80
         env:
         - name: USERPROFILE_API_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: tripviewerconfigmap-consul
-              key: USERPROFILE_API_ENDPOINT
+          value: "http://userprofilesvc-consul:8082"
+#          valueFrom:
+#            configMapKeyRef:
+#              name: tripviewerconfigmap-consul
+#              key: USERPROFILE_API_ENDPOINT
         - name: TRIPS_API_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: tripviewerconfigmap-consul
-              key: TRIPS_API_ENDPOINT        
+          value: "http://tripssvc-consul:8081"
+#          valueFrom:
+#            configMapKeyRef:
+#              name: tripviewerconfigmap-consul
+#              key: TRIPS_API_ENDPOINT        
         resources: {}
 status: {}

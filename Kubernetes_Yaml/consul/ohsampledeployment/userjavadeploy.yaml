@@ -17,11 +17,13 @@ spec:
         app: userjava-consul
       annotations:
         consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/transparent-proxy: "true"
+#        consul.hashicorp.com/transparent-proxy: "true"
     spec:
       containers:
       - image: acr0vbnv.azurecr.io/tripinsights/user-java:1.0
         name: user-java
+        ports:
+        - containerPort: 8083
         env:
         - name: SQL_SERVER
           valueFrom:
