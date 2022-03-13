@@ -53,7 +53,7 @@ module "AKS1" {
   AKSLocation                             = data.azurerm_resource_group.AKSRG.location
   AKSRGName                               = data.azurerm_resource_group.AKSRG.name
   AKSSubnetId                             = data.azurerm_subnet.fesubnet.id
-  #AKSNetworkPlugin                        = "kubenet"
+  AKSNetworkPlugin                        = "kubenet"
   #AKSNetPolProvider                       = null
   AKSClusSuffix                           = var.AKSClusSuffix
   AKSIdentityType                         = "UserAssigned"
@@ -71,7 +71,7 @@ module "AKS1" {
   CostCenterTag                           = var.CostCenterTag
   Environment                             = var.Environment
   Project                                 = var.Project
-  TaintCriticalAddonsEnabled              = false
+  TaintCriticalAddonsEnabled              = true
 
 }
 
