@@ -303,6 +303,6 @@ variable "ACRReplList" {
 }
 
 variable "ACRReplList2" {
-  type = list()
+  type = list(string)
   default = ["westeurope","northeurope"]
 }
