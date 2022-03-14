@@ -29,6 +29,44 @@ variables:
 # Stages
 
 stages:
+  - stage: docker_trivy_scan
+    jobs: 
+    - job: trivy_install
+      continueOnError: false
+      # Job step
+      steps:
+      - script: |
+         echo '######################################################'   
+         echo 'Installing Trivy'
+         echo '######################################################'
+         echo
+         sudo apt-get install wget apt-transport-https gnupg lsb-release
+         wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+         echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+         sudo apt-get update
+         sudo apt-get install trivy -y
+         echo
+         echo '######################################################'   
+         echo 'Check Trivy install'
+         echo '######################################################'        
+         trivy -v
+         echo
+         echo '######################################################'   
+         echo 'End Trivy Install'
+         echo '######################################################' 
+
+        workingDirectory: 'containers_artifacts/src/poi/'
+        displayName: 'trivy_install'
+
+      - script: |
+         echo '######################################################'   
+         echo 'Trivy scan'
+         echo '######################################################'
+         echo
+         trivy config .
+        workingDirectory: 'containers_artifacts/src/poi/'
+        displayName: 'trivy_scan'
+
   - stage: dockerbuild_poi
     jobs: 
     - job: dockerbuild
