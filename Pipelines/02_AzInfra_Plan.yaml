@@ -108,8 +108,8 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(InfraState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
           SubsetupKey: $(SubSetupState)
 
 #      - script: |
