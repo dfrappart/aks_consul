@@ -68,6 +68,8 @@ stages:
         displayName: 'trivy_scan'
 
   - stage: dockerbuild_poi
+    dependsOn: docker_trivy_scan
+    condition: succeeded()
     jobs: 
     - job: dockerbuild
       continueOnError: false
