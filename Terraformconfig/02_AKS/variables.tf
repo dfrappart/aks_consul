@@ -145,20 +145,7 @@ variable "AGWSubnetId" {
 ######################################################
 # Data sources variables
 
-variable "RGLogName" {
-  type          = string
-  description   = "name of the RG containing the logs collector objects (sta and log analytics)"
-}
 
-variable "LawSubLogName" {
-  type          = string
-  description   = "name of the log analytics workspace containing the logs"
-}
-
-variable "STASubLogName" {
-  type          = string
-  description   = "name of the storage account containing the logs"
-}
 
 variable "SubsetupSTOAName" {
   type          = string
