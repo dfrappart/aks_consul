@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: '02_Infra_AKS_Plan'
+name: '03_AKS_Plan'
 
 
 #Parameters for the pipeline
