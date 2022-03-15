@@ -118,7 +118,7 @@ stages:
           storage_account_name: $(StateSTAName)
           SubsetupKey: $(SubSetupState)
           InfraKey: $(InfraState)
-          AKSState: $(AKSState)
+          AKSKey: $(AKSState)
 
 #      - script: |
 #         echo Getting Checkov
