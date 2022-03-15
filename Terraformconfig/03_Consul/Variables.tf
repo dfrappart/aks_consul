@@ -43,7 +43,7 @@ variable "InfraSetupAccessKey" {
   description = "he storage access key of the storage account"
 }
 
-variable "statekeyInfraState" {
+variable "InfraSetupKey" {
   type    = string
   description = "the name of the file containing the state of the 02 Azure Autmation setup configuration"
 }
@@ -51,22 +51,22 @@ variable "statekeyInfraState" {
 ##############################################
 #Variable for using AKS state as a data source
 
-variable "statestoa" {
+variable "AKSSetupSTOAName" {
   type    = string
   description = "the name of the storage account storing the state of the 02 automation setup configuration"
 }
 
-variable "statecontainer" {
+variable "AKSSetupContainerName" {
   type    = string
   description = "The name of the container in which the state is stored"
 }
 
-variable "statestoakey" {
+variable "AKSSetupAccessKey" {
   type    = string
   description = "The storage access key of the storage account"
 }
 
-variable "statekeyAKSClusState" {
+variable "AKSSetupKey" {
   type    = string
   description = "The state file name for the aks state"
 }

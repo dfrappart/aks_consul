@@ -37,10 +37,10 @@ data "terraform_remote_state" "Subsetupstate" {
 data "terraform_remote_state" "Infra" {
   backend   = "azurerm"
   config    = {
-    storage_account_name = var.statestoa
-    container_name       = var.statecontainer
-    key                  = var.statekeyInfraState
-    access_key           = var.statestoakey
+    storage_account_name = var.InfrasetupSTOAName
+    container_name       = var.InfraSetupContainerName
+    key                  = var.InfraSetupKey
+    access_key           = var.InfraSetupAccessKey
   }
 }
 
@@ -85,10 +85,10 @@ data "azurerm_subnet" "agwsubnet" {
 data "terraform_remote_state" "AKSClus" {
   backend   = "azurerm"
   config    = {
-    storage_account_name = var.statestoa
-    container_name       = var.statecontainer
-    key                  = var.statekeyAKSClusState
-    access_key           = var.statestoakey
+    storage_account_name = var.AKSSetupSTOAName
+    container_name       = var.AKSSetupContainerName
+    key                  = var.AKSSetupKey
+    access_key           = var.AKSSetupAccessKey
   }
 }
 
