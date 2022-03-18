@@ -29,7 +29,7 @@ variables:
 # Stages
 
 stages:
-  - stage: docker_trivy_scan
+  - stage: docker_trivy_scan_config
     jobs: 
     - job: trivy_install
       continueOnError: false
@@ -68,7 +68,75 @@ stages:
         displayName: 'trivy_scan'
 
 
+  - stage: dockerbuild_dataload_trivy_scan_image
+    jobs: 
+    - job: trivy_install
+      continueOnError: true
+      steps:
+      - script: |
+         echo '######################################################'   
+         echo 'Installing Trivy'
+         echo '######################################################'
+         echo
+         sudo apt-get install wget apt-transport-https gnupg lsb-release
+         wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+         echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+         sudo apt-get update
+         sudo apt-get install trivy -y
+         echo
+         echo '######################################################'   
+         echo 'Check Trivy install'
+         echo '######################################################'        
+         trivy -v
+         echo
+         echo '######################################################'   
+         echo 'End Trivy Install'
+         echo '######################################################' 
+
+        workingDirectory: 'containers_artifacts/src/dataload/'
+        displayName: 'trivy_install'
+
+    - job: dockerbuild
+      continueOnError: false
+      # Job step
+      steps:
+      - script: |
+         echo '######################################################'   
+         echo 'building container'
+         echo '######################################################'
+         echo
+         docker version
+         echo
+         echo '######################################################'   
+         echo 'Start Build'
+         echo '######################################################'        
+         docker build --no-cache \
+         --build-arg IMAGE_VERSION="1.0" \
+         --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" \
+         --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" \
+         -f Dockerfile -t "tripinsights/dataload:1.0" .
+         echo
+         echo '######################################################'   
+         echo 'Listing Docker image'
+         echo '######################################################' 
+         docker image ls
+         echo
+         echo '######################################################'   
+         echo 'End Build'
+         echo '######################################################' 
+
+        workingDirectory: 'containers_artifacts/src/dataload/'
+        displayName: 'dockerbuild'
+
+    - job: docker_image_scan
+      continueOnError: false
+      dependsOn: dockerbuild
+      condition: succeeded()
+
+
   - stage: dockerbuild_dataload
+    dependsOn: dockerbuild_dataload_trivy_scan_image
+    condition: succeeded()
     jobs: 
     - job: dockerbuild
       continueOnError: false
