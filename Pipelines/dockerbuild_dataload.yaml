@@ -133,6 +133,16 @@ stages:
       dependsOn: dockerbuild
       condition: succeeded()
 
+      steps:
+      - script: |
+         echo '######################################################'   
+         echo 'Trivy scan image'
+         echo '######################################################'
+         echo
+         trivy image tripinsights/dataload:1.0
+        workingDirectory: 'containers_artifacts/src/dataload/'
+        displayName: 'trivy_scan_image'
+
 
   - stage: dockerbuild_dataload
     dependsOn: dockerbuild_dataload_trivy_scan_image
