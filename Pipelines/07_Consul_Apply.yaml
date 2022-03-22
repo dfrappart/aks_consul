@@ -165,6 +165,8 @@ stages:
         displayName: 'tfsec Scan'
 
   - stage: terraform_apply_stage
+    dependsOn: terraform_plan_stage
+    condition: succeeded()
     jobs: 
 
     - job: waitForValidation
