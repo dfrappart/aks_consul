@@ -2,6 +2,7 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
   name: deny-all
+  namespace: consul
 spec:
   destination:
     name: '*'
