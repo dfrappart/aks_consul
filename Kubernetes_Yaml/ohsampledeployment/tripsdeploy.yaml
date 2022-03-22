@@ -17,7 +17,7 @@ spec:
         app: trips
     spec:
       containers:
-      - image: acrbvcc1.azurecr.io/tripinsights/trips:1.0
+      - image: acr0vbnv.azurecr.io/tripinsights/trips:1.0
         name: trips
         env:
         - name: SQL_SERVER

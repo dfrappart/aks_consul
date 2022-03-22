@@ -17,7 +17,7 @@ spec:
         app: poi
     spec:
       containers:
-      - image: acrbvcc1.azurecr.io/tripinsights/poi:1.0
+      - image: acr0vbnv.azurecr.io/tripinsights/poi:1.0
         name: poi
         env:
         - name: SQL_SERVER
