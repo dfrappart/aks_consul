@@ -83,9 +83,6 @@ stages:
          echo 'check terraform'
          terraform version
          echo
-         echo 'check files'
-         ls -a
-         echo
          echo 'terraform plan'
          terraform plan \
          -var SubsetupAccessKey=${access_key} \
@@ -119,6 +116,11 @@ stages:
           SubsetupKey: $(SubSetupState)
           InfraKey: $(InfraState)
           AKSKey: $(AKSState)
+
+    - job: terraform_scan
+      continueOnError: false
+      # Job step
+      steps:
 
       - script: |
          echo Getting Checkov
