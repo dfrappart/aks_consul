@@ -4,11 +4,6 @@ global:
   logLevel: info
   gossipEncryption:
     autoGenerate: true
-#  metrics: 
-#    enabled: true
-#    enableAgentMetrics: true
-#    agentMetricsRetentionTime: "1m"
-#    enableGatewayMetrics: true
   tls:
     enabled: true
     enableAutoEncrypt: true
@@ -30,8 +25,5 @@ ui:
 connectInject:
   enabled: true
   default: false
-#  transparentProxy:
-#    defaultEnabled: true
-#    defaultOverwriteProbes: true
 controller:
   enabled: true
