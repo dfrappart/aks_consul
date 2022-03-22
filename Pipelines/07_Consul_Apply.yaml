@@ -183,6 +183,7 @@ stages:
           onTimeout: 'reject'
 
     - job: terraform_apply
+      dependsOn: waitForValidation
       continueOnError: false
       # Job step
       steps:
