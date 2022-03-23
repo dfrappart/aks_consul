@@ -83,8 +83,6 @@ stages:
          echo 'check terraform'
          terraform version
          echo
-         echo 'check files'
-         ls -a
          echo
          echo 'terraform plan'
          terraform plan \
@@ -120,44 +118,52 @@ stages:
           InfraKey: $(InfraState)
           AKSKey: $(AKSState)
 
-#      - script: |
-#         echo Getting Checkov
-#
-#         sudo apt update
-#         sudo apt install software-properties-common
-#         sudo add-apt-repository ppa:deadsnakes/ppa
-#         sudo apt install python3.7
-#         sudo apt install python3-pip
-#         sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
-#         
-#        displayName: 'Install Checkov'
-#
-#      - script: |
-#         echo '######################################################'   
-#         echo 'Checkov scan in directory '
-#         echo '######################################################'
-#         echo
-#         checkov -d . --quiet --soft-fail
-#    
-#        workingDirectory: 'Terraformconfig/03_Consul'
-#        displayName: 'Checkov Scan'
-#
-#      - script: |
-#         echo Getting tfsec
-#         wget https://aquasecurity.github.io/tfsec/v1.0.2/assets/signing.asc
-#         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-linux-amd64
-#         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-checkgen-linux-arm64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
-#         cat signing.asc > /tmp/tfsec_key.txt
-#         gpg --import < /tmp/tfsec_key.txt
-#         gpg --list-keys signing@tfsec.dev
-#         sudo install tfsec-linux-amd64 /usr/local/bin/tfsec 
-#         
-#        displayName: 'Install tfsec'
-#      - script: |
-#         echo '######################################################'   
-#         echo 'tfsec scan in directory '
-#         echo '######################################################'
-#         echo
-#         tfsec . -s --exclude-downloaded-modules
-#        workingDirectory: 'Terraformconfig/03_Consul'
-#        displayName: 'tfsec Scan'
+    - job: checkov_scan
+      continueOnError: false
+      
+      steps:
+      - script: |
+         echo Getting Checkov
+
+         sudo apt update
+         sudo apt install software-properties-common
+         sudo add-apt-repository ppa:deadsnakes/ppa
+         sudo apt install python3.7
+         sudo apt install python3-pip
+         sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
+         
+        displayName: 'Install Checkov'
+
+      - script: |
+         echo '######################################################'   
+         echo 'Checkov scan in directory '
+         echo '######################################################'
+         echo
+         checkov -d . --quiet --soft-fail
+    
+        workingDirectory: 'Terraformconfig/03_Consul'
+        displayName: 'Checkov Scan'
+
+    - job: tfsec_scan
+      continueOnError: false
+      
+      steps:
+      - script: |
+         echo Getting tfsec
+         wget https://aquasecurity.github.io/tfsec/v1.0.2/assets/signing.asc
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-linux-amd64
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-checkgen-linux-arm64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
+         cat signing.asc > /tmp/tfsec_key.txt
+         gpg --import < /tmp/tfsec_key.txt
+         gpg --list-keys signing@tfsec.dev
+         sudo install tfsec-linux-amd64 /usr/local/bin/tfsec 
+         
+        displayName: 'Install tfsec'
+      - script: |
+         echo '######################################################'   
+         echo 'tfsec scan in directory '
+         echo '######################################################'
+         echo
+         tfsec . -s --exclude-downloaded-modules
+        workingDirectory: 'Terraformconfig/03_Consul'
+        displayName: 'tfsec Scan'
