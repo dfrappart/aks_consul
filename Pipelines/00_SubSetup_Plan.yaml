@@ -125,7 +125,7 @@ stages:
          echo 'Checkov scan in directory '
          echo '######################################################'
          echo
-         checkov -d . --quiet --soft-fail
+         checkov -d . --quiet --soft-fail --download-external-modules true
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
         displayName: 'Checkov Scan'
