@@ -18,3 +18,4 @@ Terraformconfig/04_CSI_Secret_Store_Manifest/PodId/*.yaml
 Terraformconfig/04_CSI_Secret_Store_Manifest/SampleWorkloads/*.yaml
 armextract
 backend*.hcl
+.external_modules/
