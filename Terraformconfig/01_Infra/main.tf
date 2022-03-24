@@ -175,7 +175,7 @@ module "MSSQLAdminPWD" {
   source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
-  KeyVaultSecretSuffix                    = "MSSQLAdminPWD-${var.ResourcesSuffix}"
+  KeyVaultSecretSuffix                    = "MSSQLAdminPWD-${var.ResourcesSuffix}" #tfsec:ignore:general-secrets-no-plaintext-exposure
   #PasswordValue                           = module.SecretTest.Result
   KeyVaultId                              = data.azurerm_key_vault.keyvault.id
   ResourceOwnerTag                        = var.ResourceOwnerTag

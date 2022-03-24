@@ -194,7 +194,7 @@ module "SSHPubKey_to_KV" {
   source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
-  KeyVaultSecretSuffix                    = "SSHPub"
+  KeyVaultSecretSuffix                    = "SSHPub" #tfsec:ignore:general-secrets-no-plaintext-exposure
   PasswordValue                           = resource.tls_private_key.SSHKey.public_key_openssh
   KeyVaultId                              = module.KeyVault.Id
   ResourceOwnerTag                        = var.ResourceOwnerTag
@@ -215,7 +215,7 @@ module "SSHPrivKey_to_KV" {
   source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
-  KeyVaultSecretSuffix                    = "SSHPriv"
+  KeyVaultSecretSuffix                    = "SSHPriv" #tfsec:ignore:general-secrets-no-plaintext-exposure  
   PasswordValue                           = resource.tls_private_key.SSHKey.private_key_pem 
   KeyVaultId                              = module.KeyVault.Id
   ResourceOwnerTag                        = var.ResourceOwnerTag

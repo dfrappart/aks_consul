@@ -231,7 +231,7 @@ variable "Secretperms_UAI1_AccessPolicy" {
 
 variable "KeyVaultSecretSuffix" {
   type                            = string
-  description                     = "The kv secret suffix"
+  description                     = "The kv secret suffix" #tfsec:ignore:general-secrets-no-plaintext-exposure
   default                         = "test1"
 
 }
