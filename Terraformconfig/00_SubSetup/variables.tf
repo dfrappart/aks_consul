@@ -74,7 +74,7 @@ variable "Secretperms_TFApp_AccessPolicy" {
 variable "Certperms_TFApp_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy"
-  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","managecontacts","manageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
+  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","ManageContacts","ManageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
 
 }
 
@@ -88,7 +88,7 @@ variable "Secretperms_AKSClusterAdmins_AccessPolicy" {
 variable "Certperms_AKSClusterAdmins_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy to grant to AKS Admins"
-  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","managecontacts","manageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
+  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","ManageContacts","ManageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
 
 }
 
