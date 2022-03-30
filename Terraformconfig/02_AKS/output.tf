@@ -128,14 +128,9 @@ output "KubeKubelet_UAI_Id" {
   value             = module.AKS1.KubeKubelet_UAI_Id
 }
 
-output "Kube_Addons" {
-  sensitive         = true
-  value             = module.AKS1.FullAKS.addon_profile
-}
-
 output "Kube_AddonsOMS" {
   sensitive         = true
-  value             = module.AKS1.FullAKS.addon_profile[0].oms_agent[0].oms_agent_identity[0].object_id
+  value             = module.AKS1.FullAKS.oms_agent[0].oms_agent_identity[0].object_id
 }
 
 
