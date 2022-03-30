@@ -130,7 +130,6 @@ stages:
 
   - stage: terraform_destroy_aks_stage
     dependsOn: terraform_destroy_consul_stage
-    condition: succeeded()
     jobs:
     - job: waitForValidation
       displayName: Wait for external validation
@@ -231,7 +230,6 @@ stages:
 
   - stage: terraform_destroy_aks_infra_stage
     dependsOn: terraform_destroy_aks_stage
-    condition: succeeded()
     jobs:
     - job: waitForValidation
       displayName: Wait for external validation
@@ -328,7 +326,6 @@ stages:
 
   - stage: terraform_destroy_ak_consul_subsetup_stage
     dependsOn: terraform_destroy_aks_infra_stage
-    condition: succeeded()
     jobs:
     - job: waitForValidation
       displayName: Wait for external validation
