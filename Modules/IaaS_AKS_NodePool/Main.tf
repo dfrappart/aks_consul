@@ -18,7 +18,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "TerraAKSNodePool" {
   name                                  = "np${var.NPSuffix}"
   kubernetes_cluster_id                 = var.AKSClusterId
   vm_size                               = var.AKSNodeInstanceType
-  availability_zones                    = var.AKSAZ
+  zones                                 = var.AKSAZ
   enable_host_encryption                = var.EnableHostEncryption
   eviction_policy                       = var.EvictionPolicy
   enable_auto_scaling                   = var.EnableAKSAutoScale      
