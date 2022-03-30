@@ -141,7 +141,3 @@ output "Kube_AddonsOMS" {
 
 
 
-
-output "test" {
-  value = module.ACR.test
-}
