@@ -209,7 +209,7 @@ resource "azurerm_mssql_server" "SQLAppServer1" {
 
   identity {
     type                                  = var.MSSQLIdentityType
-    user_assigned_identity_ids            = var.MSSQLUAIId
+    identity_ids                          = [var.MSSQLUAIId]
   }
 
   public_network_access_enabled           = var.MSSQLPublicNetworkAccessEnabled
