@@ -31,7 +31,7 @@ variable "AzureTenantID" {
 variable "IsDeploymentTypeGreenField" {
   type                        = string
   default                     = true
-  description                 = "Describe the type of deployment, can be GreenField or not. If GreenField, means that the subscription setup is not applied on a newly created subscription."
+  description                 = "Describe the type of deployment, can be GreenField or not. If GreenField, means that the subscription Setup is not applied on a newly created subscription."
 
 
 }
@@ -67,28 +67,28 @@ variable "KVSuffix" {
 variable "Secretperms_TFApp_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy"
-  default                         = ["backup","purge","recover","restore","get","list","set","delete"]
+  default                         = ["Backup","Purge","Recover","Restore","Get","List","Set","Delete"]
 
 }
 
 variable "Certperms_TFApp_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy"
-  default                         = ["backup","deleteissuers","get","getissuers","listissuers","managecontacts","manageissuers","purge","recover","restore","setissuers","list","update", "create", "import", "delete"]
+  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","managecontacts","manageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
 
 }
 
 variable "Secretperms_AKSClusterAdmins_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy to grant to AKS Admins"
-  default                         = ["backup","purge","recover","restore","get","list","set","delete"]
+  default                         = ["Backup","Purge","Recover","Restore","Get","List","Set","Delete"]
 
 }
 
 variable "Certperms_AKSClusterAdmins_AccessPolicy" {
   type                            = list
   description                     = "The authorization on the secret for the Access policy to grant to AKS Admins"
-  default                         = ["backup","deleteissuers","get","getissuers","listissuers","managecontacts","manageissuers","purge","recover","restore","setissuers","list","update", "create", "import", "delete"]
+  default                         = ["Backup","DeleteIssuers","Get","GetIssuers","ListIssuers","managecontacts","manageIssuers","Purge","Recover","Restore","SetIssuers","List","Update", "Create", "Import", "Delete"]
 
 }
 
@@ -155,7 +155,7 @@ variable "CountryTag" {
 variable "CostCenterTag" {
   type                          = string
   description                   = "Tag describing the Cost Center"
-  default                       = "subsetup"
+  default                       = "subSetup"
 }
 
 
@@ -168,7 +168,7 @@ variable "Company" {
 variable "Project" {
   type                          = string
   description                   = "The name of the project"
-  default                       = "subsetupagic"
+  default                       = "subSetupagic"
 }
 
 variable "Environment" {

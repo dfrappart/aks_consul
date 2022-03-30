@@ -173,34 +173,6 @@ output "ServiceHealthAlertCriteria" {
   value                   = module.ObservabilityConfig.ServiceHealthAlertCriteria
 }
 
-##############################################################
-#Resources health Alerts Output
-
-output "ResourcesHealthAlertName" {
-
-  value                   = module.ObservabilityConfig.ResourcesHealthAlertName
-}
-
-output "ResourcesHealthAlertId" {
-
-  value                   = module.ObservabilityConfig.ResourcesHealthAlertId
-  sensitive               = true
-}
-
-output "ResourcesHealthAlertCriteria" {
-
-  value                   = module.ObservabilityConfig.ResourcesHealthAlertCriteria
-}
-
-output "testsubid" {
-  value = data.azurerm_subscription.current.id
-}
-
-output "testsubidsubstr" {
-  value = substr(data.azurerm_subscription.current.id,15,8)
-}
-
-
 ######################################################################
 # Key Vault Output
 
