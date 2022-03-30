@@ -8,8 +8,8 @@ global:
     enabled: true
     enableAutoEncrypt: true
     verify: true
-acls:
-  manageSystemACLs: true
+#  acls:
+#    manageSystemACLs: true
 server:
   replicas: 3
   connect: true
@@ -32,4 +32,4 @@ ingressGateways:
   gateways:    
   - name: ingress-gateway      
     service:        
-    type: LoadBalancer
+      type: LoadBalancer
