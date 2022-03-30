@@ -163,7 +163,7 @@ resource "azurerm_managed_disk" "datadisk" {
   storage_account_type                  = var.DataDiskStorageType
   create_option                         = var.DataDiskCreateOption
   disk_size_gb                          = var.DataDiskSize
-  zones                                 = [var.Zone]
+  zone                                  = var.Zone
   disk_encryption_set_id                = var.DataDiskEncryptionSetId 
 
   tags                                  = merge(var.DefaultTags, var.ExtraTags)
