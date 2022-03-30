@@ -1,0 +1,410 @@
+#Pipeline name
+
+name: '99_Env_Destroy'
+
+
+#Parameters for the pipeline
+
+# CD Trigger
+
+trigger:
+  none
+
+# Job Workers config
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Variables for the job
+
+variables:
+- group: ConsulLab
+- group: ConsulLabKV
+
+# Stages
+
+stages:
+
+  - stage: terraform_destroy_consul_stage
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 10
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 3 
+        inputs:
+          notifyUsers: |
+            david@teknews.cloud
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'resume'
+    - job: terraform_destroy_consul
+      dependsOn: waitForValidation
+      continueOnError: false
+      # Job step
+      steps:
+      
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName         
+         sudo mv ./terraform /usr/local/bin/terraform
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+
+      
+      - script: |
+         echo '######################################################'   
+         echo 'Init and destroy Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init \
+         -backend-config="key=${key}" \
+         -backend-config="access_key=${access_key}" \
+         -backend-config="container_name=${container_name}" \
+         -backend-config="storage_account_name=${storage_account_name}" \
+         -no-color
+         echo 'State is stored in:'${key}
+         echo
+         echo '######################################################'
+         echo 'check terraform'
+         terraform version
+         echo
+         echo 'Destroy Terraform'
+         echo
+         terraform destroy \
+         -var SubsetupAccessKey=${access_key} \
+         -var SubsetupKey=${SubsetupKey} \
+         -var SubsetupContainerName=${container_name} \
+         -var SubsetupSTOAName=${storage_account_name} \
+         -var InfrasetupSTOAName=${storage_account_name} \
+         -var InfraSetupContainerName=${container_name} \
+         -var InfraSetupKey=${InfraKey} \
+         -var InfraSetupAccessKey=${access_key} \
+         -var AKSSetupSTOAName=${storage_account_name} \
+         -var AKSSetupContainerName=${container_name} \
+         -var AKSSetupKey=${AKSKey} \
+         -var AKSSetupAccessKey=${access_key} \
+         -var AzureTenantID=${AzureTenantID} \
+         -var AzureClientSecret=${AzureClientSecret} \
+         -var AzureClientID=${AzureClientID} \
+         -var AzureSubscriptionID=${AzureSubscriptionID} \
+         -auto-approve
+     
+    
+        workingDirectory: 'Terraformconfig/03_Consul'
+        displayName: 'Terraform init & Destroy Consul'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(ConsulState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
+          SubsetupKey: $(SubSetupState)
+          InfraKey: $(InfraState)
+          AKSKey: $(AKSState)
+
+
+  - stage: terraform_destroy_aks_stage
+    dependsOn: terraform_destroy_consul_stage
+    condition: succeeded()
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 10 
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 3 
+        inputs:
+          notifyUsers: |
+            david@teknews.cloud
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'resume'
+    - job: terraform_destroy_AKS
+      dependsOn: waitForValidation
+      continueOnError: false
+      # Job step
+      steps:
+      
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri
+         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName
+         
+         sudo mv ./terraform /usr/local/bin/terraform
+         
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+     
+      - script: |
+         echo '######################################################'   
+         echo 'Init and plan Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init \
+         -backend-config="key=${key}" \
+         -backend-config="access_key=${access_key}" \
+         -backend-config="container_name=${container_name}" \
+         -backend-config="storage_account_name=${storage_account_name}" \
+         -no-color
+         echo 'State is stored in:'${key}
+         echo
+         echo '######################################################'
+         echo 'check terraform'
+         terraform version
+         echo
+         echo 'terraform destroy'
+         terraform destroy \
+         -var-file="Lab.tfvars" \
+         -var SubsetupAccessKey=${access_key} \
+         -var SubsetupKey=${SubsetupKey} \
+         -var SubsetupContainerName=${container_name} \
+         -var SubsetupSTOAName=${storage_account_name} \
+         -var statestoa=${storage_account_name} \
+         -var statecontainer=${container_name} \
+         -var statekeyInfraState=${InfraKey} \
+         -var statestoakey=${access_key} \
+         -var AzureTenantID=${AzureTenantID} \
+         -var AzureClientSecret=${AzureClientSecret} \
+         -var AzureClientID=${AzureClientID} \
+         -var AzureSubscriptionID=${AzureSubscriptionID} \
+         -auto-approve
+    
+        workingDirectory: 'Terraformconfig/02_AKS'
+        displayName: 'Terraform init & Destroy AKS'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(AKSState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
+          SubsetupKey: $(SubSetupState)
+          InfraKey: $(InfraState)
+
+
+  - stage: terraform_destroy_aks_infra_stage
+    dependsOn: terraform_destroy_aks_stage
+    condition: succeeded()
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 10 
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 3 
+        inputs:
+          notifyUsers: |
+            david@teknews.cloud
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'resume'
+    - job: terraform_destroy_aks_infra
+      dependsOn: waitForValidation
+      continueOnError: false
+      # Job step
+      steps:
+      
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri
+         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName
+         
+         sudo mv ./terraform /usr/local/bin/terraform
+         
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+
+      
+      - script: |
+         echo '######################################################'   
+         echo 'Init and destroy Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init \
+         -backend-config="key=${key}" \
+         -backend-config="access_key=${access_key}" \
+         -backend-config="container_name=${container_name}" \
+         -backend-config="storage_account_name=${storage_account_name}" \
+         -no-color
+         echo 'State is stored in:'${key}
+         echo
+         echo '######################################################'
+         echo 'check terraform'
+         terraform version
+         echo
+         echo 'terraform destroy'
+         terraform destroy \
+         -var-file="Lab.tfvars" \
+         -var SubsetupAccessKey=${access_key} \
+         -var SubsetupKey=${SubsetupKey} \
+         -var SubsetupContainerName=${container_name} \
+         -var SubsetupSTOAName=${storage_account_name} \
+         -var AzureTenantID=${AzureTenantID} \
+         -var AzureClientSecret=${AzureClientSecret} \
+         -var AzureClientID=${AzureClientID} \
+         -var AzureSubscriptionID=${AzureSubscriptionID} \
+         -auto-approve
+    
+        workingDirectory: 'Terraformconfig/01_Infra'
+        displayName: 'Terraform init & Destroy'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(InfraState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
+          SubsetupKey: $(SubSetupState)
+
+
+  - stage: terraform_destroy_ak_consul_subsetup_stage
+    dependsOn: terraform_destroy_aks_infra_stage
+    condition: succeeded()
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 10 
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 3 
+        inputs:
+          notifyUsers: |
+            david@teknews.cloud
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'resume'
+    - job: terraform_destroy_aks_consul_subsetup
+      dependsOn: waitForValidation
+      continueOnError: false
+      # Job step
+      steps:
+      
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri
+         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName
+         
+         sudo mv ./terraform /usr/local/bin/terraform
+         
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+
+      
+      - script: |
+         echo '######################################################'   
+         echo 'Init and plan Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
+         echo
+         echo 'State is stored in:'${key}
+         echo
+         echo '######################################################'
+         echo 'check terraform'
+         terraform version
+         echo
+         echo 'Destroy Terraform'
+         echo
+         terraform destroy -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -auto-approve
+     
+    
+        workingDirectory: 'Terraformconfig/00_SubSetup'
+        displayName: 'Terraform init & Destroy'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(SubSetupState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
