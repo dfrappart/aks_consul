@@ -57,7 +57,7 @@ module "AKS1" {
   #AKSNetPolProvider                       = null
   AKSClusSuffix                           = var.AKSClusSuffix
   AKSIdentityType                         = "UserAssigned"
-  UAIId                                   = module.UAI_AKS.FullUAIOutput.id
+  UAIIds                                  = [module.UAI_AKS.FullUAIOutput.id]
   PublicSSHKey                            = data.azurerm_key_vault_secret.AKSSSHKey.value
   IsAGICEnabled                           = var.IsAGICEnabled
   AGWId                                   = null #var.IsAGICEnabled ? module.AGW[0].AppGW.id : null
