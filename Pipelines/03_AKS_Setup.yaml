@@ -315,6 +315,7 @@ stages:
          -var AzureClientSecret=${AzureClientSecret} \
          -var AzureClientID=${AzureClientID} \
          -var AzureSubscriptionID=${AzureSubscriptionID} \
+         -auto-approve
     
         workingDirectory: 'Terraformconfig/02_AKS'
         displayName: 'Terraform init & apply'
