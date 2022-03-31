@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: '07_Consul_Apply'
+name: '04_Consul_Setup'
 
 
 #Parameters for the pipeline
