@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: '03_Infra_AKS_Apply'
+name: '02_Infra_AKS_Setup'
 
 
 #Parameters for the pipeline
@@ -8,7 +8,13 @@ name: '03_Infra_AKS_Apply'
 # CD Trigger
 
 trigger:
-  none
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - Terraformconfig/01_Infra/*
+    - Modules/*
 
 # Job Workers config
 
@@ -18,13 +24,13 @@ pool:
 # Variables for the job
 
 variables:
-- group: CSILab
-- group: CSILabKV
+- group: ConsulLab
+- group: ConsulLabKV
 
 # Stages
 
 stages:
-  - stage: terraform_apply_stage
+  - stage: terraform_plan_stage
     jobs: 
     - job: terraform_plan
       continueOnError: false
@@ -78,9 +84,6 @@ stages:
          echo 'check terraform'
          terraform version
          echo
-         echo 'check files'
-         ls -a
-         echo
          echo 'terraform plan'
          terraform plan \
          -var-file="Lab.tfvars" \
@@ -91,9 +94,9 @@ stages:
          -var AzureTenantID=${AzureTenantID} \
          -var AzureClientSecret=${AzureClientSecret} \
          -var AzureClientID=${AzureClientID} \
-         -var AzureSubscriptionID=${AzureSubscriptionID}
+         -var AzureSubscriptionID=${AzureSubscriptionID} \
     
-        workingDirectory: 'Terraformconfig/01_Infra_AKS'
+        workingDirectory: 'Terraformconfig/01_Infra'
         displayName: 'Terraform init & Plan'
         env:
           AzureClientID: $(TFId)
@@ -102,11 +105,138 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(InfraState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
           SubsetupKey: $(SubSetupState)
 
+  - stage: checkov_scan_stage
+    jobs: 
+    - job: checkov_scan
+      continueOnError: false
+      # Job step
+      steps:
+
+      - script: |
+         echo Getting Checkov
+
+         sudo apt update
+         sudo apt install software-properties-common
+         sudo add-apt-repository ppa:deadsnakes/ppa
+         sudo apt install python3.7
+         sudo apt install python3-pip
+         sudo python3.7 -m pip install -U checkov #to install or upgrade checkov)
+         
+        displayName: 'Install Checkov'
+
+      - script: |
+         echo '######################################################'   
+         echo 'Checkov scan in directory '
+         echo '######################################################'
+         echo
+         checkov -d . --quiet --soft-fail --download-external-modules true
+    
+        workingDirectory: 'Terraformconfig/01_Infra'
+        displayName: 'Checkov Scan'
+
+  - stage: tfsec_scan_stage
+    jobs: 
+    - job: tfsec_scan
+      continueOnError: false
+      # Job step
+      steps:
+
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri
+         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName
+         
+         sudo mv ./terraform /usr/local/bin/terraform
+         
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+
+
+      - script: |
+         echo '######################################################'   
+         echo 'Init Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
+         echo
+         echo 'State is stored in:'${key}
+    
+    
+        workingDirectory: 'Terraformconfig/01_Infra'
+        displayName: 'Terraform init & before tfsec scan'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(InfraState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
+
+      - script: |
+         echo Getting tfsec
+         wget https://aquasecurity.github.io/tfsec/v1.0.2/assets/signing.asc
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-linux-amd64
+         wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-checkgen-linux-arm64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
+         cat signing.asc > /tmp/tfsec_key.txt
+         gpg --import < /tmp/tfsec_key.txt
+         gpg --list-keys signing@tfsec.dev
+         sudo install tfsec-linux-amd64 /usr/local/bin/tfsec 
+         
+        displayName: 'Install tfsec'
+        
+      - script: |
+         echo '######################################################'   
+         echo 'tfsec scan in directory '
+         echo '######################################################'
+         echo
+         tfsec . -s --exclude-downloaded-modules
+        workingDirectory: 'Terraformconfig/01_Infra'
+        displayName: 'tfsec Scan'
+
+  - stage: terraform_apply_stage
+    dependsOn: terraform_plan_stage
+    condition: succeeded()
+    jobs:
+    - job: waitForValidation
+      displayName: Wait for external validation
+      pool: server
+      timeoutInMinutes: 10 
+      steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 3 
+        inputs:
+          notifyUsers: |
+            david@teknews.cloud
+          instructions: 'Please validate the build configuration and resume'
+          onTimeout: 'reject'
     - job: terraform_apply
+      dependsOn: waitForValidation
       continueOnError: false
       # Job step
       steps:
@@ -137,6 +267,7 @@ stages:
         displayName: 'Download and update Terraform'
         env:
           TFVer: $(TFVer)
+
       
       - script: |
          echo '######################################################'   
@@ -158,10 +289,8 @@ stages:
          echo 'check terraform'
          terraform version
          echo
-         echo 'check files'
-         ls -a
+         echo 'Apply Terraform'
          echo
-         echo 'terraform apply'
          terraform apply \
          -var-file="Lab.tfvars" \
          -var SubsetupAccessKey=${access_key} \
@@ -174,8 +303,8 @@ stages:
          -var AzureSubscriptionID=${AzureSubscriptionID} \
          -auto-approve
     
-        workingDirectory: 'Terraformconfig/01_Infra_AKS'
-        displayName: 'Terraform init & Plan'
+        workingDirectory: 'Terraformconfig/01_Infra'
+        displayName: 'Terraform init & Apply'
         env:
           AzureClientID: $(TFId)
           AzureClientSecret: $(TFSecret)
@@ -183,7 +312,6 @@ stages:
           AzureTenantID: $(TenantId)
           key: $(InfraState)
           access_key: $(TFStateSTOAK)
-          container_name: $(SubSetupContainerName)
-          storage_account_name: $(SubSetupSTAName)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
           SubsetupKey: $(SubSetupState)
-

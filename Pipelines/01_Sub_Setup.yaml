@@ -1,6 +1,6 @@
 #Pipeline name
 
-name: '01_SubSetup_Apply'
+name: '01_Sub_Setup'
 
 
 #Parameters for the pipeline
@@ -64,7 +64,7 @@ stages:
         env:
           TFVer: $(TFVer)
 
-      
+
       - script: |
          echo '######################################################'   
          echo 'Init and plan Terraform'
@@ -73,12 +73,8 @@ stages:
          echo '######################################################'    
          echo 'Init Terraform'
          echo
-         terraform init \
-         -backend-config="key=${key}" \
-         -backend-config="access_key=${access_key}" \
-         -backend-config="container_name=${container_name}" \
-         -backend-config="storage_account_name=${storage_account_name}" \
-         -no-color
+         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
+         echo
          echo 'State is stored in:'${key}
          echo
          echo '######################################################'
@@ -86,22 +82,10 @@ stages:
          terraform version
          echo
          echo 'check files'
-         ls
-         cat ./Lab.tfvars
-         echo
-         echo 'AzureSubscriptionID: ' ${AzureSubscriptionID} 
-         echo
-         echo 'AzureTenantID: ' ${AzureTenantID} 
-         echo
-         echo 'AzureClientID: ' ${AzureClientID} 
-         echo
+         ls -a
          echo 'Plan Terraform'
          echo
-         terraform plan -var-file="Lab.tfvars" \
-         -var AzureSubscriptionID=${AzureSubscriptionID} \
-         -var AzureTenantID=${AzureTenantID} \
-         -var AzureClientSecret=${AzureClientSecret} \
-         -var AzureClientID=${AzureClientID} -input=false
+         terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
      
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
@@ -116,6 +100,14 @@ stages:
           container_name: $(StateContainerName)
           storage_account_name: $(StateSTAName)
 
+
+  - stage: checkov_scan_stage
+    jobs: 
+
+    - job: checkov_scan
+      continueOnError: false
+      
+      steps:
       - script: |
          echo Getting Checkov
 
@@ -133,14 +125,76 @@ stages:
          echo 'Checkov scan in directory '
          echo '######################################################'
          echo
-         checkov -d . --compact --quiet --download-external-modules true --soft-fail
+         checkov -d . --quiet --soft-fail --download-external-modules true
     
         workingDirectory: 'Terraformconfig/00_SubSetup'
         displayName: 'Checkov Scan'
 
+
+  - stage: tfsec_scan_stage
+    jobs: 
+
+    - job: tfsec_scan
+      continueOnError: false
+      
+      steps:
+
+      - script: |
+         echo Getting Terraform
+         echo "Building TFURI for DL"
+         echo "current terraform version is $TFVer"
+         export TFuri1="https://releases.hashicorp.com/terraform/$TFVer/terraform_"
+         export TFuriTemp=$TFuri1$TFVer
+         export TFuriend="_linux_amd64.zip"
+         export TFuri=$TFuriTemp$TFuriend
+         echo "TFDL URI is $TFuri"
+         wget $TFuri
+         
+         echo "building TFZip name"
+         export TFZip1="terraform_"
+         export TFZipEnd="_linux_amd64.zip"
+         export TFZipTemp=$TFZip1$TFVer
+         export ZIPName=$TFZipTemp$TFZipEnd
+         echo "Zip name is $ZIPName"
+         unzip -a $ZIPName
+         
+         sudo mv ./terraform /usr/local/bin/terraform
+         
+         terraform version
+         
+        displayName: 'Download and update Terraform'
+        env:
+          TFVer: $(TFVer)
+
+
+      - script: |
+         echo '######################################################'   
+         echo 'Init Terraform'
+         echo '######################################################'
+         echo
+         echo '######################################################'    
+         echo 'Init Terraform'
+         echo
+         terraform init -backend-config="key=${key}" -backend-config="access_key=${access_key}" -backend-config="container_name=${container_name}" -backend-config="storage_account_name=${storage_account_name}"
+         echo
+         echo 'State is stored in:'${key}
+    
+    
+        workingDirectory: 'Terraformconfig/00_SubSetup'
+        displayName: 'Terraform init & before tfsec scan'
+        env:
+          AzureClientID: $(TFId)
+          AzureClientSecret: $(TFSecret)
+          AzureSubscriptionID: $(SubscriptionId)
+          AzureTenantID: $(TenantId)
+          key: $(SubSetupState)
+          access_key: $(TFStateSTOAK)
+          container_name: $(StateContainerName)
+          storage_account_name: $(StateSTAName)
+
+
       - script: |
          echo Getting tfsec
-
          wget https://aquasecurity.github.io/tfsec/v1.0.2/assets/signing.asc
          wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-linux-amd64
          wget https://github.com/aquasecurity/tfsec/releases/download/v1.1.3/tfsec-checkgen-linux-arm64.D66B222A3EA4C25D5D1A097FC34ACEFB46EC39CE.sig
