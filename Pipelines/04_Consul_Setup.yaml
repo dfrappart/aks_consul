@@ -222,7 +222,9 @@ stages:
 
 
   - stage: terraform_apply_stage
-    dependsOn: terraform_plan_stage
+    dependsOn: 
+    - terraform_plan_stage
+    - terraform_checkov_scan_stage
     condition: succeeded()
     jobs: 
 
