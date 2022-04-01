@@ -36,7 +36,7 @@ provider "azurerm" {
 module "ResourceGroup" {
   count                                   = length(var.ResourceGroupSuffixList)
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks//003_ResourceGroup/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/003_ResourceGroup/"
   #Module variable      
   RGSuffix                                = "-${var.ResourcesSuffix}-${element(var.ResourceGroupSuffixList,count.index)}"
   RGLocation                              = var.AzureRegion
@@ -102,7 +102,7 @@ module "SecretTest_to_KV" {
     for k,v in var.SpokeVnetConfig : k=>v if v.IsVMDeployed == true
     }
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
   KeyVaultSecretSuffix                    = "VMPwd-${each.key}-${var.ResourcesSuffix}"
@@ -179,7 +179,7 @@ module "NSGRuleHTTPAllow_FromInternetToFE" {
 module "MSSQLAdminPWD" {
 
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
   KeyVaultSecretSuffix                    = "MSSQLAdminPWD-${var.ResourcesSuffix}" #tfsec:ignore:general-secrets-no-plaintext-exposure
