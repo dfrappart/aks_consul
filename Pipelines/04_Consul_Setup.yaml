@@ -225,6 +225,7 @@ stages:
     dependsOn: 
     - terraform_plan_stage
     - terraform_checkov_scan_stage
+    - terraform_tfsec_scan_stage
     condition: succeeded()
     jobs: 
 
