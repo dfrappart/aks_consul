@@ -84,7 +84,7 @@ module "ObservabilityConfig" {
 module "ResourceGroup" {
 
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks//003_ResourceGroup/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/003_ResourceGroup/"
   #Module variable      
   RGSuffix                                = "${var.KVSuffix}-${var.Project}"
   RGLocation                              = var.AzureRegion
@@ -170,7 +170,7 @@ module "AKS_AGW_Cert_Wildcard" {
 
   count                                   = length(var.CertName_Wildcard)
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks//413_KeyvaultCert/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/413_KeyvaultCert/"
 
   #Module variable     
   KeyVaultCertName                        = var.CertName_Wildcard[count.index]
@@ -197,7 +197,7 @@ resource "tls_private_key" "SSHKey" {
 module "SSHPubKey_to_KV" {
 
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
   KeyVaultSecretSuffix                    = "SSHPub" #tfsec:ignore:general-secrets-no-plaintext-exposure
@@ -218,7 +218,7 @@ module "SSHPubKey_to_KV" {
 module "SSHPrivKey_to_KV" {
 
   #Module Location
-  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/412_KeyvaultSecret/"
 
   #Module variable     
   KeyVaultSecretSuffix                    = "SSHPriv" #tfsec:ignore:general-secrets-no-plaintext-exposure  
