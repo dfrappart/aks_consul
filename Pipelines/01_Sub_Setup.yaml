@@ -81,8 +81,6 @@ stages:
          echo 'check terraform'
          terraform version
          echo
-         echo 'check files'
-         ls -a
          echo 'Plan Terraform'
          echo
          terraform plan -var-file="Lab.tfvars" -var AzureSubscriptionID=${AzureSubscriptionID} -var AzureTenantID=${AzureTenantID} -var AzureClientSecret=${AzureClientSecret} -var AzureClientID=${AzureClientID} -input=false
@@ -215,7 +213,10 @@ stages:
         displayName: 'tfsec Scan'
 
   - stage: terraform_apply_stage
-    dependsOn: terraform_plan_stage
+    dependsOn: 
+    - terraform_plan_stage
+    - checkov_scan_stage
+    - tfsec_scan_stage
     condition: succeeded()
     jobs:
     - job: waitForValidation
