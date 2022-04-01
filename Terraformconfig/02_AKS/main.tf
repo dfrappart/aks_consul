@@ -39,7 +39,7 @@ provider "azurerm" {
 module "UAI_AKS" {
 
   #Module location
-  source = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/441_UserAssignedIdentity/"
+  source = "github.com/dfrappart/Terra-AZModuletest//Modules_building_blocks/441_UserAssignedIdentity/"
   
   #Module variable
   UAISuffix                               = "aks-${lower(var.AKSClusSuffix)}"
@@ -69,7 +69,7 @@ module "AKS1" {
   IsAGICEnabled                           = var.IsAGICEnabled
   AGWId                                   = null #var.IsAGICEnabled ? module.AGW[0].AppGW.id : null
   PrivateClusterPublicFqdn                = var.PrivateClusterPublicFqdn
-  PrivateDNSZoneId                        = null   #"/subscriptions/16e85b36-5c9d-48cc-a45d-c672a4393c36/resourceGroups/rsg-dns/providers/Microsoft.Network/privateDnsZones/privatelink.westeurope.azmk8s.io"
+  PrivateDNSZoneId                        = null
   IsAKSPrivate                            = var.IsAKSPrivate
   ACG1Id                                  = data.azurerm_monitor_action_group.SubACG.id
   AKSClusterAdminsIds                     = [var.AKSClusterAdminsIds]
