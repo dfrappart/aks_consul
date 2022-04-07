@@ -40,11 +40,7 @@ module "ResourceGroup" {
   #Module variable      
   RGSuffix                                = "-${var.ResourcesSuffix}-${element(var.ResourceGroupSuffixList,count.index)}"
   RGLocation                              = var.AzureRegion
-  ResourceOwnerTag                        = var.ResourceOwnerTag
-  CountryTag                              = var.CountryTag
-  CostCenterTag                           = var.CostCenterTag
-  EnvironmentTag                          = var.Environment
-  Project                                 = var.Project
+  DefaultTags                             = var.DefaultTags
 
 }
 
