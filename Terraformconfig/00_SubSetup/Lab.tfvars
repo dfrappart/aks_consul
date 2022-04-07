@@ -14,3 +14,12 @@ SubLogSuffix                        = "conslog"
 Project                             = "subsetupconsul"
 AzureRegion                         = "swedencentral"
 RGLogLocation                       = "swedencentral"
+
+DefaultTags                         = {
+    ResourceOwner                       = "That would be me"
+    Country                             = "fr"
+    CostCenter                          = "subsetup"
+    Project                             = "subsetupconsul"
+    Environment                         = "lab"
+    ManagedBy                           = "Terraform"    
+}
