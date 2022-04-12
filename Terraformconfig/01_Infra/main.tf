@@ -63,11 +63,7 @@ module "SpokeVNet" {
   VNetAddressSpace                        = [each.value.VNetAddressSpace]
   NetworkWatcherName                      = "NetworkWatcher_${module.ResourceGroup[0].RGLocation}"
   IsTrafficAnalyticsEnabled               = false
-  ResourceOwnerTag                        = var.ResourceOwnerTag
-  CountryTag                              = var.CountryTag
-  CostCenterTag                           = var.CostCenterTag
-  Environment                             = var.Environment
-  Project                                 = var.Project
+  DefaultTags                             = var.DefaultTags
 
 }
 
