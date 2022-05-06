@@ -11,7 +11,7 @@ IsAGICEnabled                             = false
 IsAKSPrivate                              = false
 AKSClusSuffix                             = "consul"
 
-AzureRegion                               = "swedencentral"
+AzureRegion                               = "eastus"
 
 DefaultTags                               = {
     ResourceOwner                             = "That would be me"
@@ -25,7 +25,7 @@ DefaultTags                               = {
 
 ACRReplList                               = {
   "Region1"                                   = {
-      Location                                    = "westeurope"
+      Location                                    = "francecentral"
       ZoneRedundancyEnabled                       = true      
     }
 
