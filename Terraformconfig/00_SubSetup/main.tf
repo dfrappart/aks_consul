@@ -206,7 +206,8 @@ module "SSHPubKey_to_KV" {
   Project                                 = var.Project
 
   depends_on = [
-    module.KeyVault
+    module.KeyVault,
+    module.KeyVaultAccessPolicyTF
   ]
 
 }
@@ -227,7 +228,8 @@ module "SSHPrivKey_to_KV" {
   Project                                 = var.Project
 
   depends_on = [
-    module.KeyVault
+    module.KeyVault,
+    module.KeyVaultAccessPolicyTF
   ]
 
 }
