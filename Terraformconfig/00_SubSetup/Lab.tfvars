@@ -12,8 +12,8 @@ SubContactList                      = "david@teknews.cloud"
 AKSClusterAdminsIds                 = "546e2d3b-450e-4049-8f9c-423e1da3444c"
 SubLogSuffix                        = "conslog"
 Project                             = "subsetupconsul"
-AzureRegion                         = "swedencentral"
-RGLogLocation                       = "swedencentral"
+AzureRegion                         = "eastus"
+RGLogLocation                       = "eastus"
 
 DefaultTags                         = {
     ResourceOwner                       = "That would be me"
