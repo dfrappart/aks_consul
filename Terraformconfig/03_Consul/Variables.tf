@@ -283,3 +283,65 @@ variable "HelmCSISecretStoreKVProviderParam" {
   }
 
 }
+
+##############################################################
+#Variable declaration for cert manager
+
+variable "CerManagerChartVer" {
+  type                          = string
+  description                   = "The version of the chart"
+  default                       = "1.8.0"
+}
+
+variable "HelmCerManagerParam" {
+  type                  = map(object({
+    ParamName = string
+    ParamValue = string
+
+
+  }))
+  description            = "A map used to feed the dynamic blocks of the cert manager helm chart"
+  default                = {
+
+      "set1" = {
+        ParamName             = "installCRDs"
+        ParamValue            = "true"
+
+
+    }
+
+
+  }
+
+}
+
+##############################################################
+#Variable declaration for velero
+
+variable "VeleroChartVer" {
+  type                          = string
+  description                   = "The version of the chart"
+  default                       = "2.29.4"
+}
+
+variable "HelmVeleroParam" {
+  type                  = map(object({
+    ParamName = string
+    ParamValue = string
+
+
+  }))
+  description            = "A map used to feed the dynamic blocks of the cert manager helm chart"
+  default                = {
+
+      "set1" = {
+        ParamName             = "installCRDs"
+        ParamValue            = "true"
+
+
+    }
+
+
+  }
+
+}
