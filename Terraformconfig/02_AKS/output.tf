@@ -133,6 +133,7 @@ output "Kube_AddonsOMS" {
   value             = module.AKS1.FullAKS.oms_agent[0].oms_agent_identity[0].object_id
 }
 
-
+######################################################
+# Output for the AKS nodepool module 
 
 
