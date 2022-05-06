@@ -37,5 +37,5 @@ MSSQLADAdminObjectId                = "546e2d3b-450e-4049-8f9c-423e1da3444c"
 
 MSSQLDBThreatDetectionPolicyEmail   = ["david@teknews.cloud"]
 
-AzureRegion                         = "swedencentral"
+AzureRegion                         = "eastus"
 MSSQLAcceptAzureService             = true
