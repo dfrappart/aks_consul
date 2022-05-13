@@ -112,7 +112,7 @@ stages:
 
 
   - stage: dockerbuild_dataload
-    dependsOn: dockerbuild_dataload_trivy_scan_image
+    dependsOn: docker_trivy_scan_config
     condition: succeeded()
     jobs: 
     - job: dockerbuild
