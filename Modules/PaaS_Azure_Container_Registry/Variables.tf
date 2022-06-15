@@ -81,7 +81,7 @@ variable "ACRReplList" {
   default                   = {
 
     "Region1"               = {
-      Location                = "westeurope"
+      Location                = "northeurope"
       ZoneRedundancyEnabled   = true      
     }
 

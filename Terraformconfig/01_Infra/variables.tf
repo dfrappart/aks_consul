@@ -396,3 +396,10 @@ variable "MSSQLAcceptAzureService" {
   description                           = "A flag to activate or deactivate the Azure Service Allowed on the SQL Server"
   default                               = false
 }
+
+variable "Secretperms_UAI_AKS_CSI_AccessPolicy" {
+  type                            = list
+  description                     = "The authorization on the secret for the Access policy"
+  default                         = ["Get","List"]
+
+}

@@ -345,3 +345,93 @@ variable "HelmVeleroParam" {
   }
 
 }
+
+##############################################################
+#Variable declaration for helm kured set
+
+variable "kuredChartVer" {
+  type                          = string
+  description                   = "The version of the chart"
+  default                       = "2.9.1"
+}
+
+variable "HelmKuredSensitiveParamName" {
+  type                          = string
+  description                   = "A parameter to send notification to teams" 
+  default                       = "extraArgs.slack-hook-url"
+}
+
+variable "HelmKuredSensitiveParamValue" {
+  type                          = string
+  description                   = "The webhook that trigger the logic app responsible to send the notificaiton to teams" 
+
+}
+
+variable "HelmKuredParam" {
+  type                  = map
+  description            = "A map used to feed the dynamic blocks of the kured helm chart"
+  default                = {
+
+      "set1" = {
+        ParamName             = "extraArgs.start-time"
+        ParamValue            = "9am"
+
+    }
+      "set2" = {
+        ParamName             = "extraArgs.end-time"
+        ParamValue            = "5pm"
+
+    }
+      "set3" = {
+        ParamName             = "extraArgs.time-zone"
+        ParamValue            = "Europe/Paris"
+
+    }
+      "set4" = {
+        ParamName             = "extraArgs.reboot-days"
+        ParamValue            = "mon\\,tue\\,wed\\,thu\\,fri"
+
+    }
+      "set5" = {
+        ParamName             = "tolerations[0].effect"
+        ParamValue            = "NoSchedule"
+
+    }
+      "set6" = {
+        ParamName             = "tolerations[0].key"
+        ParamValue            = "role.kubernetes.io/master"
+
+    }
+      "set7" = {
+        ParamName             = "tolerations[1].operator"
+        ParamValue            = "Exists"
+
+    }
+      "set8" = {
+        ParamName             = "tolerations[1].key"
+        ParamValue            = "CriticalAddonsOnly"
+
+    }
+      "set9" = {
+        ParamName             = "tolerations[2].operator"
+        ParamValue            = "Exists"
+
+    }
+      "set10" = {
+        ParamName             = "tolerations[2].effect"
+        ParamValue            = "NoExecute"
+
+    }
+      "set11" = {
+        ParamName             = "tolerations[3].operator"
+        ParamValue            = "Exists"
+
+    }
+      "set12" = {
+        ParamName             = "tolerations[3].effect"
+        ParamValue            = "NoSchedule"
+
+    }
+  }
+
+}

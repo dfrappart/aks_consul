@@ -17,7 +17,7 @@ spec:
         app: userjava
     spec:
       containers:
-      - image: acr0vbnv.azurecr.io/tripinsights/user-java:1.0
+      - image: acrbaqhp.azurecr.io/tripinsights/user-java:1.0
         name: user-java
         env:
         - name: SQL_SERVER

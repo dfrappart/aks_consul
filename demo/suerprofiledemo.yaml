@@ -2,23 +2,37 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: userprofile
-  name: userprofiledeploy
+    app: userprofilegbl
+    aadpodidbinding: uaicsitest2-binding
+  name: userprofilegbl
   namespace: api
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: userprofile
+      app: userprofilegbl
+      aadpodidbinding: uaicsitest2-binding
   strategy: {}
   template:
     metadata:
       labels:
-        app: userprofile
+        app: userprofilegbl
+        aadpodidbinding: uaicsitest2-binding
     spec:
+      volumes:
+      - name: sqlpwd
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: akvkv-ohtest
       containers:
       - image: acrbaqhp.azurecr.io/tripinsights/userprofile:1.0
         name: userprofile
+        volumeMounts:
+          - mountPath: /secrets
+            name: sqlpwd
+            readOnly: true
         env:
         - name: SQL_SERVER
           valueFrom:
@@ -34,11 +48,6 @@ spec:
           valueFrom:
             secretKeyRef:
               name: tripsecret
-              key: SQL_USR
-        - name: SQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: tripsecret
-              key: pwd    
+              key: SQL_USR        
         resources: {}
 status: {}

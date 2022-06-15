@@ -17,7 +17,7 @@ spec:
         app: tripviewer
     spec:
       containers:
-      - image: acr0vbnv.azurecr.io/tripinsights/tripviewer:1.0
+      - image: acrbaqhp.azurecr.io/tripinsights/tripviewer:1.0
         name: tripviewer
         env:
         - name: USERPROFILE_API_ENDPOINT

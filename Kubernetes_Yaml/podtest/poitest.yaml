@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: poi
+    aadpodidbinding: uaicsitest2-binding
+  name: poi
+  namespace: api
+spec:
+  volumes:
+    - name: sqlpwd
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: akvkv-ohtest
+  containers:
+  - image: acrbaqhp.azurecr.io/tripinsights/poi:1.0
+    name: poi
+    volumeMounts:
+    - name: sqlpwd
+      mountPath: /secrets
+      readOnly: true
+    env:
+    - name: SQL_SERVER
+      valueFrom:
+        configMapKeyRef:
+          name: poiconfigmap
+          key: SQL_SERVER
+    - name: WEB_PORT
+      valueFrom:
+        configMapKeyRef:
+          name: poiconfigmap
+          key: WEB_PORT
+    - name: SQL_USER
+      valueFrom:
+        secretKeyRef:
+          name: tripsecret
+          key: SQL_USR
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

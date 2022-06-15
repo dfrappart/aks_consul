@@ -88,7 +88,7 @@ resource "azurerm_ip_group" "VNetIPGroups" {
 ######################################################################
 # VM
 
-module "SecretTest_to_KV" {
+module "SecretTest_to_KVVM" {
 
   for_each                                = {
     for k,v in var.SpokeVnetConfig : k=>v if v.IsVMDeployed == true
@@ -131,7 +131,7 @@ module "VMWin" {
   VmSize                                  = "Standard_D2s_v3"
   OSDiskTier                              = "StandardSSD_LRS"
   #CloudinitscriptPath                     = var.CloudinitscriptPath
-  VmAdminPassword                         = module.SecretTest_to_KV[each.key].SecretFullOutput.value
+  VmAdminPassword                         = module.SecretTest_to_KVVM[each.key].SecretFullOutput.value
 
 
   DefaultTags                             = var.DefaultTags
@@ -309,4 +309,116 @@ resource "azurerm_mssql_database_extended_auditing_policy" "SQLDBMyDrivingDBExte
   storage_account_access_key_is_secondary = var.MSSQLDBExtendedAutitingPolicySTAAccessKeyIsSecondary
   retention_in_days                       = var.MSSQLDBExtendedAutitingPolicyRetentionInDays
   log_monitoring_enabled                  = var.MSSQLDBExtendedAutitingPolicyLogMonitoringEnabled
+}
+
+
+######################################################################
+# Creating Secrets in kv for demo purpose
+
+module "SecretTest_to_KV" {
+
+  count                                   = 2
+  #Module Location
+  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/412_KeyvaultSecret/"
+
+  #Module variable     
+  KeyVaultSecretSuffix                    = "CSISecret${count.index+1}"
+  #PasswordValue                           = module.SecretTest.Result
+  KeyVaultId                              = data.azurerm_key_vault.keyvault.id
+  ResourceOwnerTag                        = var.ResourceOwnerTag
+  CountryTag                              = var.CountryTag
+  CostCenterTag                           = var.CostCenterTag
+  Environment                             = var.Environment
+  Project                                 = var.Project
+
+  depends_on = [
+
+  ]
+
+}
+
+
+######################################################################
+# Creating a UAI for Kubernetes and CSI Demo with Pod Identity
+
+module "UAI_AKS_CSI" {
+
+  count                                   = 2
+  #Module Location
+  source                                  = "github.com/dfrappart/Terra-AZModuletest/Custom_Modules/Kube_UAI/"
+
+  #Module variable
+  UAISuffix                               = "CSITest${count.index+1}"
+  TargetLocation                          = module.ResourceGroup[count.index].RGLocation
+  TargetRG                                = module.ResourceGroup[count.index].RGName
+  RBACScope                               = module.ResourceGroup[count.index].RGId
+  BuiltinRoleName                         = "Reader"
+  ResourceOwnerTag                        = var.ResourceOwnerTag
+  CountryTag                              = var.CountryTag
+  CostCenterTag                           = var.CostCenterTag
+  Environment                             = var.Environment
+  Project                                 = var.Project
+
+
+}
+
+# Creating file manifest for csi demo
+
+resource "local_file" "podidentitymanifest" {
+  count                                   = 2
+  content                                 = module.UAI_AKS_CSI[count.index].podidentitymanifest
+  filename                                = "../04_CSI_Secret_Store_Manifest/PodId/${module.UAI_AKS_CSI[count.index].Name}.yaml"
+}
+
+resource "local_file" "podidentitybindingmanifest" {
+  count                                   = 2
+  content                                 = module.UAI_AKS_CSI[count.index].podidentitybindingmanifest
+  filename                                = "../04_CSI_Secret_Store_Manifest/PodId/${module.UAI_AKS_CSI[count.index].Name}_Binding.yaml"
+}
+
+resource "local_file" "secretprovider" {
+  count                                   = 2
+  content                                 = templatefile("./yamltemplate/secretprovider-template.yaml",
+    {
+      SecretProviderClassName             = "${data.azurerm_key_vault.keyvault.name}${module.UAI_AKS_CSI[count.index].Name}"
+      UAIClientId                         = module.UAI_AKS_CSI[count.index].ClientId
+      KVName                              = data.azurerm_key_vault.keyvault.name
+      SecretName                          = module.SecretTest_to_KV[count.index].SecretFullOutput.name
+      SecretVersion                       = ""
+      TenantId                            = data.azurerm_subscription.current.tenant_id
+    }
+  )
+  filename = "../04_CSI_Secret_Store_Manifest/SecretStore/${lower(data.azurerm_key_vault.keyvault.name)}${count.index+1}-podid-secretstore.yaml"
+}
+
+resource "local_file" "podexample" {
+  count                                   = 2
+  content                                 = templatefile("./yamltemplate/TestPod-template.yaml",
+    {
+      PodName                             = "pod-${data.azurerm_key_vault.keyvault.name}${module.UAI_AKS_CSI[count.index].Name}"
+      SecretProviderClassName             = "${data.azurerm_key_vault.keyvault.name}${module.UAI_AKS_CSI[count.index].Name}"
+      UAIName                             = module.UAI_AKS_CSI[count.index].Name
+    }
+  )
+  filename = "../04_CSI_Secret_Store_Manifest/SampleWorkloads/demo-pod${count.index+1}.yaml"
+}
+
+# Granting access to UAI on the target kv
+
+module "AKSKeyVaultAccessPolicy_UAI_AKS_CSI" {
+
+  count                                   = 2
+  #Module Location
+  source                                  = "github.com/dfrappart/Terra-AZModuletest/Modules_building_blocks/411_KeyVault_Access_Policy/"
+
+  #Module variable     
+  VaultId                                 = data.azurerm_key_vault.keyvault.id
+  KeyVaultTenantId                        = data.azurerm_subscription.current.tenant_id
+  KeyVaultAPObjectId                      = module.UAI_AKS_CSI[count.index].PrincipalId
+  Secretperms                             = var.Secretperms_UAI_AKS_CSI_AccessPolicy
+
+  depends_on = [
+
+  ]
+
 }

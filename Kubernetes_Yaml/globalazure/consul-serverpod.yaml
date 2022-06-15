@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations: ...
+  labels: ...
+  name: consul-server-0
+  namespace: consul
+spec:
+  affinity: ...
+  containers:
+  - command: ...
+===================Truncated=========================
+    volumeMounts:
+    - mountPath: /consul/data
+      name: data-consul
+===================Truncated=========================
+  tolerations: ...
+  volumes:
+  - name: data-consul
+    persistentVolumeClaim:
+      claimName: data-consul-consul-server-0
+===================Truncated=========================
+status: ...
