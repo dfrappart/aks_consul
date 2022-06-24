@@ -101,6 +101,7 @@ stages:
          -var AzureClientSecret=${AzureClientSecret} \
          -var AzureClientID=${AzureClientID} \
          -var AzureSubscriptionID=${AzureSubscriptionID} \
+         -var HelmKuredSensitiveParamValue=${KuredWebhook}
     
         workingDirectory: 'Terraformconfig/03_Consul'
         displayName: 'Terraform init & Plan'
@@ -116,6 +117,7 @@ stages:
           SubsetupKey: $(SubSetupState)
           InfraKey: $(InfraState)
           AKSKey: $(AKSState)
+          KuredWebhook: $(kuredwebhook)
 
     - job: terraform_scan
       continueOnError: false
