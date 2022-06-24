@@ -246,7 +246,7 @@ module "AKS_NodePool" {
     for k,v in var.AKSNodePoolConfig : k=>v if v.IsNodePoolDeployed == true
     }
   #Module Location
-  source                                  = "../../Modules/IaaS_AKS_NodePool/"
+  source                                  = "github.com/dfrappart/Terra-AZModuletest//Custom_Modules/IaaS_AKS_NodePool/"
 
   #Module variable
 
